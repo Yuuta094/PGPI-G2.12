@@ -1,0 +1,10 @@
+{% extends "core/base.html" %}
+{% block title%}{{obra.name}}{% endblock %}
+<div class="grid grid-cols-5 gap-6">
+    <div class="col-span-3">
+        <img src="{{obra.image.url}}" class="rounded-xl">
+    </div>
+</div>        
+{% block content %}
+<!-- Your content goes here -->
+{% endblock %}
