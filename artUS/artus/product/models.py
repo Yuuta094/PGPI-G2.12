@@ -1,17 +1,17 @@
 from django.db import models
 
 class Category(models.TextChoices):
-    STILL_LIFE = "Still Life"
-    PORTRAIT = "Portrait"
-    LANDSCAPE = "Landscape"
-    ABSTRACT = "Abstract"
-    FIGURATIVE = "Figurative"
+    NATURALEZA_MUERTA = "Naturaleza muerta"
+    RETRATO = "Retrato"
+    PAISAJE = "Paisaje"
+    ABSTRACTO = "Abstracto"
+    FIGURATIVO = "Figurativo"
 
-class Artwork(models.Model):
+class Obra(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
     author = models.CharField(max_length=100)
-    category = models.CharField(max_length=100, choices=Category.choices, default=Category.PORTRAIT)
+    category = models.CharField(max_length=100, choices=Category.choices, default=Category.NATURALEZA_MUERTA)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     quantity = models.IntegerField()
     opinions = models.JSONField(null=True, blank=True)
