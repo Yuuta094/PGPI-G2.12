@@ -9,7 +9,7 @@
         <div class="grid grid-cols-3 gap-3">
             {% for obra in obras %}
                 <div>
-                    <a href="{% url 'obra:detail' obra.id %}">
+                    <a href="{% url 'product:detail' obra.id %}">
                         <div>
                             <img src="{{ obra.image.url }}" class="rounded-t-xl">
                         </div>
