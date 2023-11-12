@@ -1,8 +1,8 @@
 {% extends "core/base.html" %}
-{% block title%}{{obra.name}}{% endblock %}
+{% block title%}{{artwork.name}}{% endblock %}
 <div class="grid grid-cols-5 gap-6">
     <div class="col-span-3">
-        <img src="{{obra.image.url}}" class="rounded-xl">
+        <img src="{{artwork.image.url}}" class="rounded-xl">
     </div>
 </div>        
 {% block content %}

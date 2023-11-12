@@ -1,0 +1,15 @@
+{% block content %}
+
+{% if request.user.is_authenticated %}
+    <div class="w-1/2 my-6 mx-auto p-6 bg-gray-100 rounded-xl">
+        <form method='POST'>
+            {% csrf_token %}
+            <p>¿Estás seguro de que quieres cerrar sesión?</p>
+            <button class="py-4 px-8 text-lg bg-teal-500 hover:bg-teal-700 rounded-xl text-white">Cerrar sesión</button>
+        </form>
+    </div>
+{% else %}
+<p>No has iniciado sesión, ¿quieres <a href='/login/'>iniar sesión</a>?</p>
+{% endif %}
+
+{% endblock %}
