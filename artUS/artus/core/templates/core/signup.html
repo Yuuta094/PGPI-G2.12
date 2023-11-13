@@ -7,7 +7,6 @@
     <h1 class="mb-6 text-3xl">Registrarse</h1>
     <form method="post" action=".">
         {% csrf_token %}
-
         <div class="mb-3">
             <label class="inline-block mb-2">Nombre</label><br>
             {{ form.username }}
@@ -24,16 +23,16 @@
             <label class="inline-block mb-2">Confirmación de Contraseña</label><br>
             {{ form.password2 }}
         </div>
-
+        
         {% if form.errors or form.non_field_errors %}
             <div class="mb-3 p-6 bg-red-100 rounded-xl">
                 {% for field in form %}
                     {{ field.errors }}
                 {% endfor%}
-
                 {{ form.non_field_errors }}
             </div>
-        {% end if %}
+        {% endif %}
         <button class="py-4 px-8 text-lg bg-teal-500 hover:bg-teal-700 rounded-xl text-white">Registrarse</button>
+    </form>
 </div>
 {% endblock %}
