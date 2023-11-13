@@ -20,6 +20,7 @@ class Artwork(models.Model):
     opinions = models.JSONField(null=True, blank=True)
     manufacturer = models.CharField(max_length=100)
     image = models.ImageField(upload_to='product_images', null=True, blank=True)
+    
 
     class Meta:
         ordering = ['name']
