@@ -7,19 +7,25 @@
 
         <script src="https://cdn.tailwindcss.com"></script>
 
-        <title>{% block title %}{% endblock %} | Artus</title>
+        <title>{% block title %}{% endblock %} | ArtUS</title>
     </head>
 
     <body>
         <nav class="py-6 px-6 flex justify-between items-center border-b border-gray-200">
-            <a href="/" class = "text-2xl font-bold">Artus</a>      
+            <a href="/" class = "text-2xl font-bold">ArtUS</a>      
             
-            <div class="sapce-x-6">
-                <a href="#" class="text-gray-600 font-semibold hover:text-gray-900">Home</a>
-                <a href="#" class="text-gray-600 font-semibold hover:text-gray-900">Browse</a>
+            <div class="space-x-6">
+                <a href="{% url 'index' %}" class="text-gray-600 font-semibold hover:text-gray-900">Home</a>
+                <a href="#" class="text-gray-600 font-semibold hover:text-gray-900">Ver</a>
 
-                <a href="#" class="px-6 py-3 text-lg font-semibold bg-teal-500 text-white rounded-xl hover:bg-teal-700">Sign up</a>
-                <a href="#" class="px-6 py-3 text-lg font-semibold bg-gray-500 text-white rounded-xl hover:bg-gray-700">Log in</a>
+                {% if request.user.is_authenticated %}
+                    <a href="#" class="px-6 py-3 text-lg font-semibold bg-teal-500 text-white rounded-xl hover:bg-teal-700">Inbox</a>
+                    <a href="#" class="px-6 py-3 text-lg font-semibold bg-gray-500 text-white rounded-xl hover:bg-gray-700">Dashboard</a>
+                    <a href="{% url 'core:logout' %}" class="px-6 py-3 text-lg font-semibold bg-gray-500 text-white rounded-xl hover:bg-gray-700">Cerrar sesión</a>
+                {% else %}
+                    <a href="{% url 'core:signup' %}" class="px-6 py-3 text-lg font-semibold bg-teal-500 text-white rounded-xl hover:bg-teal-700">Registrarse</a>
+                    <a href="{% url 'core:login' %}" class="px-6 py-3 text-lg font-semibold bg-gray-500 text-white rounded-xl hover:bg-gray-700">Iniciar sesión</a>
+                {% endif %}
             </div>
         </nav>
         <div class="px-6 py-6">
@@ -29,37 +35,23 @@
 
         <footer class="py-6 px-6 flex justify-between bg-gray-800">
             <div class="w-2/3 pr-10">
-                <h3 class="mb-5 font-semibold text-gray-400">Artus</h3>" 
-
-                <p class="text-lg text-gray-500">Dracukeo, el empalador, la culeo, un taladrador
-                    Le meto el de'o, dice por favor, la caliento, soy un radiador
-                    Si no tienes los 18, eso es cárcel (no, no, no)
-                    Si no son mayores de edades, pa' tu casa a ver Pocoyo (Pato)
-                    Si se viene tu amiga, no hay problem, tiene hueco
-                    Si ayer cumpliste los 18, tienes premio, toma huevo, ey
-                    La meto, la tuerzo y la saco, Batikeo, como un colacao'
-                    Corono mi huevo y me marcho (ay, ma') voy to' coloca'o
-                    Hay jaleo
-                    Quiere bombeo
-                    En Keolandia es coreo (Keoland)
-                    Se cambia y se dice trakeo (Keoland)
-                    En par de años (Eres menor)
-                    Ya te veo, ya te veo
-                    El cristal te empaño
-                    Amadeo, que te veo (Keo, Keo)
-                    Se te fue de nuevo, este tema es el rey del perreo</p>
+                <h3 class="mb-5 font-semibold text-gray-400">ArtUS</h3>
+                <p class="text-lg text-gray-500">ArtUS es un servicio web que permite 
+                    realizar la compra de diversas obras de arte a sus clientes.
+                    Estas obras serán mayoritariamente cuadros que pertenecerán 
+                    a diversas categorías y corrientes artísticas.
+                </p>
             </div>
 
             <div class="w-1/3">
-                <h3 class="mb-5 font-semibold text-gray-400">Menu</h3>
+                <h3 class="mb-5 font-semibold text-gray-400">Menú</h3>
 
-                <ul class="sapce-y-2">
-                    <li><a href="#" class="text-lg text-teal-500 hover:text-teal-700">Home</a></li>
+                <ul class="space-y-2">
+                    <li><a href="{% url 'index' %}" class="text-lg text-teal-500 hover:text-teal-700">Home</a></li>
                     <li><a href="{% url 'about' %}" class="text-lg text-teal-500 hover:text-teal-700">About</a></li>
-                    <li><a href="#" class="text-lg text-teal-500 hover:text-teal-700">Contact</a></li>
-                    <li><a href="#" class="text-lg text-teal-500 hover:text-teal-700">Privacy</a></li>
-                    <li><a href="#" class="text-lg text-teal-500 hover:text-teal-700">Terms of use</a></li>
-                    <li><a href="#" class="text-lg text-teal-500 hover:text-teal-700">enquirre batraja</a></li>
+                    <li><a href="{% url 'contact' %}" class="text-lg text-teal-500 hover:text-teal-700">Contacto</a></li>
+                    <li><a href="#" class="text-lg text-teal-500 hover:text-teal-700">Privacidad</a></li>
+                    <li><a href="#" class="text-lg text-teal-500 hover:text-teal-700">Términos de uso</a></li>
                 </ul>
             </div>
         </footer>

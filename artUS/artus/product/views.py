@@ -1,10 +1,11 @@
 from django.shortcuts import render,get_object_or_404
-from .models import Obra
+from .models import Artwork
+
 
 def detail(request,pk):
-    obra = get_object_or_404(Obra, pk=pk)
-    related_obras = Obra.objects.filter(category=obra.category).exclude(pk=pk)
+    artwork = get_object_or_404(Artwork, pk=pk)
+    related_obras = Artwork.objects.filter(category=artwork.category).exclude(pk=pk)
     return render(request,'product/detail.html', {
-        'obra':obra,
+        'artwork':artwork,
         'related_obras':related_obras
     })
