@@ -6,19 +6,22 @@ WIDGETS_STILES= 'w-full py-4 px-6 rounded-xl border'
 class NewItemForm(forms.ModelForm):
     class Meta:
         model= Obra
-        fields= ('nombre','descripción','precio', 'imagen')
+        fields= ('category','name','description','price', 'image')
         
         widgets = {
-            'nombre': forms.Textarea(attrs={
+            'categroy': forms.Select(attrs={
+               'class': WIDGETS_STILES 
+            }),
+            'name': forms.Textarea(attrs={
                 'class': WIDGETS_STILES
             }),
-            'descripcion': forms.Textarea(attrs={
+            'description': forms.Textarea(attrs={
                 'class': WIDGETS_STILES
             }),
-            'precio': forms.TextInput(attrs={
+            'price': forms.TextInput(attrs={
                 'class': WIDGETS_STILES
             }),
-            'imange': forms.FileInput(attrs={
+            'image': forms.FileInput(attrs={
                 'class': WIDGETS_STILES
             })
         }
