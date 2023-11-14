@@ -20,3 +20,36 @@ class ProductDetailViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Test Product')
         self.assertTemplateUsed(response, 'product/detail.html')
+        
+
+class ProductCreateViewTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+
+    def test_create_view(self):
+        response = self.client.post(reverse('product:new'), {'author': 'Test_author', 'name': 'New Product', 'description':'Test_description', 'price': 19.99, 'quantity': 3,  'manufacturer':'Test_manufacturer'})
+        self.assertEqual(response.status_code, 302)  # 302 significa redirección después de una creación exitosa
+        self.assertTrue(Artwork.objects.filter(name='New Product').exists())
+
+class ProductUpdateViewTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.product = Artwork.objects.create(name='Test Product', price=10.99, quantity=5)
+
+    def test_update_view(self):
+        response = self.client.post(reverse('product:edit', args=[self.product.id]), {'author': 'Update_author', 'name': 'Update Product', 'description':'Update_description', 'price': 15.99, 'quantity': 8,  'manufacturer':'Upadte_manufacturer'})
+        self.assertEqual(response.status_code, 302)  # 302 significa redirección después de una actualización exitosa
+        self.product.refresh_from_db()
+        self.assertEqual(self.product.name, 'Updated Product')
+        self.assertEqual(self.product.price, 15.99)
+        self.assertEqual(self.product.quantity, 8)
+
+class ProductDeleteViewTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.product = Artwork.objects.create(name='Test Product', price=10.99, quantity=5)
+
+    def test_delete_view(self):
+        response = self.client.post(reverse('product:delete', args=[self.product.id]))
+        self.assertEqual(response.status_code, 302)  # 302 significa redirección después de un borrado exitoso
+        self.assertFalse(Artwork.objects.filter(name='Test Product').exists())

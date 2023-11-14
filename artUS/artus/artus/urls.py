@@ -20,10 +20,14 @@ from django.contrib import admin
 from django.urls import path,include
 from core.views import index, about, contact
 
+from django.urls import include, path
+from core.views import index, about
+
 
 urlpatterns = [
     path('', include('core.urls')),
     path('index/', index, name='index'),
+    path('dashboard/', include('dashboard.urls')),
     path('product/', include('product.urls')),
     path('about/', about, name='about'),
     path('contact/', contact, name='contact'),
