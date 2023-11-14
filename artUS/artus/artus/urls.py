@@ -17,11 +17,15 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path
-from core.views import index, about
+from django.urls import path,include
+from core.views import index, about, contact
+
 
 urlpatterns = [
-    path('', index, name='index'),
+    path('', include('core.urls')),
+    path('index/', index, name='index'),
+    path('product/', include('product.urls')),
     path('about/', about, name='about'),
+    path('contact/', contact, name='contact'),
     path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

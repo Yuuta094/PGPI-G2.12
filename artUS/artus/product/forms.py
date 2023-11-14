@@ -1,24 +1,24 @@
 from django import forms
-from .models import Obra
+from .models import Artwork
 
 WIDGETS_STILES= 'w-full py-4 px-6 rounded-xl border'
 
 class EdititemForm(forms.ModelForm):
     class Meta:
-        model= Obra
-        fields= ('nombre','descripción','precio', 'imagen','is_sold')
+        model= Artwork
+        fields= ('name','description','price', 'image')
         
         widgets = {
-            'nombre': forms.Textarea(attrs={
+            'name': forms.Textarea(attrs={
                 'class': WIDGETS_STILES
             }),
-            'descripcion': forms.Textarea(attrs={
+            'description': forms.Textarea(attrs={
                 'class': WIDGETS_STILES
             }),
-            'precio': forms.TextInput(attrs={
+            'price': forms.TextInput(attrs={
                 'class': WIDGETS_STILES
             }),
-            'imange': forms.FileInput(attrs={
+            'image': forms.FileInput(attrs={
                 'class': WIDGETS_STILES
             })
         }
