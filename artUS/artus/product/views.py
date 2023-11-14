@@ -1,6 +1,8 @@
-from django.shortcuts import render, redirect
+
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .forms import NewItemForm
+from .models import Artwork
 
 # Create your views here.
 
@@ -10,7 +12,7 @@ def new(request):
         form= NewItemForm(request.POST, request.FILES)
         
         if form.is_valid():
-            item= form.save(commit=False)
+            item= form.save()
             item.created_by = request.user
             item.save()
             
@@ -21,4 +23,12 @@ def new(request):
     return render(request, 'product/form.html',{
         'form': form, 
         'title': 'NewItem'})
-    
+
+
+def detail(request,pk):
+    artwork = get_object_or_404(Artwork, pk=pk)
+    related_obras = Artwork.objects.filter(category=artwork.category).exclude(pk=pk)
+    return render(request,'product/detail.html', {
+        'artwork':artwork,
+        'related_obras':related_obras
+    })

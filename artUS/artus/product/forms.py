@@ -1,24 +1,31 @@
 from django import forms
-from .models import Obra
+from .models import Artwork
 
-WIDGETS_STILES= 'w-full py-4 px-6 rounded-xl border'
+WIDGETS_STILES= 'w-full py-2 px-2 rounded-xl border'
 
 class NewItemForm(forms.ModelForm):
     class Meta:
-        model= Obra
-        fields= ('category','name','description','price', 'image')
+        model= Artwork
+        fields= ('category','author','name','description','price', 'quantity', 'manufacturer','image' )
+        
         
         widgets = {
-            'categroy': forms.Select(attrs={
+            'category': forms.Select(attrs={
                'class': WIDGETS_STILES 
             }),
-            'name': forms.Textarea(attrs={
+            'author': forms.TextInput(attrs={
+                'class': WIDGETS_STILES
+            }),
+            'name': forms.TextInput(attrs={
                 'class': WIDGETS_STILES
             }),
             'description': forms.Textarea(attrs={
                 'class': WIDGETS_STILES
             }),
             'price': forms.TextInput(attrs={
+                'class': WIDGETS_STILES
+            }),
+             'manufacturer': forms.TextInput(attrs={
                 'class': WIDGETS_STILES
             }),
             'image': forms.FileInput(attrs={
