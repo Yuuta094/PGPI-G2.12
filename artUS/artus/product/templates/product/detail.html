@@ -21,6 +21,16 @@
                 {{artwork.description}}
             </p>   
         {% endif %}  
+
+       
+	    <div class="mt-6 p-6 bg-white roundd-xl">
+    
+   {% if request.user.is_staff %}
+		<a href="{% url 'product:edit' artwork.id %}" class="inline-block mt-6 px-6 py-3 text-xl font-semibold  bg-green-500 text-white rounded-xl">Editar</a>
+		<a href="{% url 'product:delete' artwork.id %}" class="inline-block mt-6 px-6 py-3 text-xl font-semibold  bg-red-500 text-white rounded-xl">Borrar</a>
+    	</div>
+    {% endif %}
+
         <a href="#" class="inline-block mt-6 px-6 py-3  text-xl font-semibold  bg-teal-500 text-white hover:bg-teal-700 rounded-xl">Contactar manufacturador</a>
         
 </div>  

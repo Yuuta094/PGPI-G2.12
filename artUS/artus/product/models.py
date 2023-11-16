@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Category(models.TextChoices):
@@ -21,7 +22,6 @@ class Artwork(models.Model):
     manufacturer = models.CharField(max_length=100)
     image = models.ImageField(upload_to='product_images', null=True, blank=True)
     
-
     class Meta:
         ordering = ['name']
 
