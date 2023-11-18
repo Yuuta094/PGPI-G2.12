@@ -1,11 +1,34 @@
-from django.shortcuts import render,get_object_or_404
-from .models import Category, Obra
+from django.shortcuts import render, redirect, get_object_or_404,redirect
+from django.contrib.auth.decorators import login_required
+
+from .forms import NewItemForm,EditItemForm
+from .models import Category, Artwork
+
+# Create your views here.
+
+@login_required
+def new(request):
+    if request.method== "POST":
+        form= NewItemForm(request.POST, request.FILES)
+        
+        if form.is_valid():
+            item= form.save()
+            item.created_by = request.user
+            item.save()
+            
+            return redirect('product:detail', pk=item.id)
+    else:
+        form = NewItemForm()
+    
+    return render(request, 'product/form.html',{
+        'form': form, 
+        'title': 'NewItem'})
 
 def detail(request,pk):
-    obra = get_object_or_404(Obra, pk=pk)
-    related_obras = Obra.objects.filter(category=obra.category).exclude(pk=pk)
+    artwork = get_object_or_404(Artwork, pk=pk)
+    related_obras = Artwork.objects.filter(category=artwork.category).exclude(pk=pk)
     return render(request,'product/detail.html', {
-        'obra':obra,
+        'artwork':artwork,
         'related_obras':related_obras
     })
     
@@ -22,7 +45,7 @@ def search(request):
     author = request.GET.get('author')
     min_price = request.GET.get('min_price')
     max_price = request.GET.get('max_price')
-    obras = Obra.objects.filter(name__icontains=q, category__icontains=category, author__icontains=author)
+    obras = Artwork.objects.filter(name__icontains=q, category__icontains=category, author__icontains=author)
     if min_price:
         obras = obras.filter(price__gte=min_price)
     if max_price:
@@ -36,3 +59,32 @@ def search(request):
         'min_price':min_price,
         'max_price':max_price
     })
+
+
+@login_required
+def edit(request, pk):
+    
+    obra= get_object_or_404(Artwork, pk=pk)
+    
+    if request.method == "POST":
+        form= EditItemForm(request.POST, request.FILES, instance=obra)
+        
+        if form.is_valid():
+            form.save()
+            
+            return redirect('product:detail', pk=obra.id)
+    else:
+        form = EditItemForm(instance=obra)
+    
+    return render(request, 'product/form.html',{
+        'form': form, 
+        'title': 'Edit Item'})
+    
+
+
+@login_required
+def delete(request, pk):
+    obra= get_object_or_404(Artwork, pk=pk)
+    obra.delete()
+    
+    return redirect('dashboard:index')
