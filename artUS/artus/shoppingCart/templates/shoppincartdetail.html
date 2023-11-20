@@ -1,0 +1,45 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+  <h2>Carrito de Compras</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Producto</th>
+        <th>Cantidad</th>
+        <th>Precio</th>
+        <th>Total</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in cart_items %}
+        <tr>
+          <td>{{ item.artwork.name }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>{{ item.artwork.price }}</td>
+          <td>{{ item.accum_value }}</td>
+          <td>
+            <form method="post" action="{% url 'carrito:add_from_cart' item.artwork.id %}">
+              {% csrf_token %}
+              <input type="submit" value="+">
+            </form>
+            <form method="post" action="{% url 'carrito:substract' item.artwork.id %}">
+              {% csrf_token %}
+              <input type="submit" value="-">
+            </form>
+            <form method="post" action="{% url 'carrito:remove' item.artwork.id %}">
+              {% csrf_token %}
+              <input type="submit" value="Eliminar">
+            </form>
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="5">No hay productos en el carrito.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <h3>Total: {{ total }}</h3>
+{% endblock %}

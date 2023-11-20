@@ -12,11 +12,12 @@
 
     <body>
         <nav class="py-6 px-6 flex justify-between items-center border-b border-gray-200">
-            <a href="/" class = "text-2xl font-bold">ArtUS</a>      
-            
+            <a href="/" class = "text-2xl font-bold">ArtUS</a>   
+                        
             <div class="space-x-6">
                 <a href="{% url 'index' %}" class="text-gray-600 font-semibold hover:text-gray-900">Home</a>
                 <a href="#" class="text-gray-600 font-semibold hover:text-gray-900">Ver</a>
+                <a href="{% url 'shoppingCart:carrito_detail' %}" class="text-gray-600 font-semibold hover:text-gray-900">Carrito</a>
 
             {% if request.user.is_staff %}
                 <a href="{%  url 'product:new' %}" class="text-gray-600 font-semibold hover:text-gray-900">Subir obra</a>

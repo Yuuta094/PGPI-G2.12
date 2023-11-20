@@ -7,6 +7,7 @@
 {% load static %}
 
 {% block content %}
+
 <div class="grid grid-cols-5 gap-6">
     <div class="col-span-3">
         <img src="{{artwork.image.url}}" class="rounded-xl">
@@ -22,7 +23,12 @@
             </p>   
         {% endif %}  
 
-       
+        <form method="post" action="{% url 'shoppingCart:add' artwork.id %}">
+            {% csrf_token %}
+            <div class="flex justify-center mt-6">
+                <button class="py-2 px-2 text-lg bg-teal-500 hover:bg-teal-700 rounded-xl text-white">Añadir al carrito</button>
+            </div>
+        </form>
 	    <div class="mt-6 p-6 bg-white roundd-xl">
     
    {% if request.user.is_staff %}
@@ -30,8 +36,8 @@
 		<a href="{% url 'product:delete' artwork.id %}" class="inline-block mt-6 px-6 py-3 text-xl font-semibold  bg-red-500 text-white rounded-xl">Borrar</a>
     	</div>
     {% endif %}
-
-        <a href="#" class="inline-block mt-6 px-6 py-3  text-xl font-semibold  bg-teal-500 text-white hover:bg-teal-700 rounded-xl">Contactar manufacturador</a>
+    
+    
         
 </div>  
 <div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
