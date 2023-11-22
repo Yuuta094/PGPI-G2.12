@@ -29,35 +29,34 @@
                 <button class="py-2 px-2 text-lg bg-teal-500 hover:bg-teal-700 rounded-xl text-white">Añadir al carrito</button>
             </div>
         </form>
-	    <div class="mt-6 p-6 bg-white roundd-xl">
+        <div class="mt-6 p-6 bg-white roundd-xl">
     
-   {% if request.user.is_staff %}
-		<a href="{% url 'product:edit' artwork.id %}" class="inline-block mt-6 px-6 py-3 text-xl font-semibold  bg-green-500 text-white rounded-xl">Editar</a>
-		<a href="{% url 'product:delete' artwork.id %}" class="inline-block mt-6 px-6 py-3 text-xl font-semibold  bg-red-500 text-white rounded-xl">Borrar</a>
-    	</div>
-    {% endif %}
-    
-    
-        
-</div>  
-<div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
-    <h2 class="mb-12 text-2xl text-center">Objetos relacionados</h2>
-    <div class="grid grid-cols-3 gap-3">
-        {% for item in related_items %}
-            <div>
-                <a href="{% url 'item:detail' item.id %}">
-                    <div>
-                        <img src="{{ item.image.url }}" class="rounded-t-xl">
-                    </div>
+        {% if request.user.is_staff %}
+            <a href="{% url 'product:edit' artwork.id %}" class="inline-block mt-6 px-6 py-3 text-xl font-semibold  bg-green-500 text-white rounded-xl">Editar</a>
+            <a href="{% url 'product:delete' artwork.id %}" class="inline-block mt-6 px-6 py-3 text-xl font-semibold  bg-red-500 text-white rounded-xl">Borrar</a>
+        </div>
+        {% endif %}
+    </div>  
+</div>
+<div class="mt-4 px-4 py-8 bg-gray-100 rounded-xl">
+    <div class="container mx-auto">
+        <h2 class="mb-8 text-2xl text-center">Obras relacionados</h2>
+        <div class="grid grid-cols-3 gap-3">
+            {% for obra in related_obras %}
+                <div class="flex flex-col items-center">
+                    <a href="{% url 'product:detail' obra.id %}">
+                        <div class="w-30 h-30">
+                            <img src="{{ obra.image.url }}" class="rounded-t-xl w-full h-full object-cover">
+                        </div>
 
-                    <div class="p-6 bg-white rounded-b-xl">
-                        <h2 class="text-2xl">{{ item.name }}</h2>
-                        <p class="text-gray-500">Precio: {{ item.price }}€</p>
-                    </div>
-                </a>
-            </div>
-        {% endfor %}
+                        <div class="p-4 bg-white rounded-b-xl w-full text-center">
+                            <h2 class="text-2xl">{{ obra.name }}</h2>
+                            <p class="text-gray-500">Precio: {{ obra.price }}€</p>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
     </div>
-</div>        
-
+</div>
 {% endblock %}

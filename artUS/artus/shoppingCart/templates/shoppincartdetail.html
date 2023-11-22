@@ -1,45 +1,49 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
-  <h2>Carrito de Compras</h2>
-  <table>
-    <thead>
+  <h2 class="text-2xl font-bold mb-4">Carrito de Compras</h2>
+  <table class="w-full text-left table-auto">
+    <thead class="bg-gray-500 text-white">
       <tr>
-        <th>Producto</th>
-        <th>Cantidad</th>
-        <th>Precio</th>
-        <th>Total</th>
-        <th>Acciones</th>
+        <th class="px-4 py-2">Producto</th>
+        <th class="px-4 py-2">Cantidad</th>
+        <th class="px-4 py-2">Precio</th>
+        <th class="px-4 py-2">Total</th>
+        <th class="px-4 py-2">Acciones</th>
       </tr>
     </thead>
     <tbody>
       {% for item in cart_items %}
-        <tr>
-          <td>{{ item.artwork.name }}</td>
-          <td>{{ item.quantity }}</td>
-          <td>{{ item.artwork.price }}</td>
-          <td>{{ item.accum_value }}</td>
-          <td>
+      <tr class="bg-gray-100">
+        <td class="border px-4 py-2">{{ item.artwork.name }}</td>
+        <td class="border px-4 py-2">{{ item.quantity }}</td>
+        <td class="border px-4 py-2">{{ item.artwork.price }}</td>
+        <td class="border px-4 py-2">{{ item.accum_value }}</td>
+                <td class="border px-4 py-2">
+          <div class="flex space-x-2">
             <form method="post" action="{% url 'carrito:add_from_cart' item.artwork.id %}">
               {% csrf_token %}
-              <input type="submit" value="+">
+              <input type="submit" value="+" class="bg-teal-500 hover:bg-teal-700 text-white font-bold py-1 px-2 rounded w-8 h-8">
             </form>
             <form method="post" action="{% url 'carrito:substract' item.artwork.id %}">
               {% csrf_token %}
-              <input type="submit" value="-">
+              <input type="submit" value="-" class="bg-black hover:bg-gray-700 text-white font-bold py-1 px-2 rounded w-8 h-8">
             </form>
-            <form method="post" action="{% url 'carrito:remove' item.artwork.id %}">
+            <form method="post" action="{% url 'carrito:remove' item.artwork.id %}" >
               {% csrf_token %}
-              <input type="submit" value="Eliminar">
+              <input type="submit" value="Eliminar" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded">
             </form>
-          </td>
-        </tr>
-      {% empty %}
-        <tr>
-          <td colspan="5">No hay productos en el carrito.</td>
-        </tr>
-      {% endfor %}
+          </div>
+        </td>
+      </tr>
+    {% empty %}
+      <tr>
+        <td colspan="5" class="border px-4 py-2 text-center">No hay productos en el carrito.</td>
+      </tr>
+    {% endfor %}
     </tbody>
   </table>
-  <h3>Total: {{ total }}</h3>
+  <div class="mt-4">
+    <h2 class="text-xl font-bold">Total: {{ total }}</h2>
+  </div>
 {% endblock %}
