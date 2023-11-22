@@ -88,3 +88,8 @@ def delete(request, pk):
     obra.delete()
     
     return redirect('dashboard:index')
+
+
+def simple_checkout(request):
+    template_name= "buttonsPaypal.html"
+    return render(request, template_name)
