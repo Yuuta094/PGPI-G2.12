@@ -11,6 +11,8 @@ urlpatterns = [
     path('<int:pk>/',views.detail,name='detail'),
     path('search/',views.search_page,name='search_page'),
     path('search/result/',views.search,name='search'),
-    path('new/#',views.simple_checkout,name='simple_checkout'),
+    path('new/#',views.simple_checkout,name='simple_checkout'), #TODO cambiar 
+    path('sucess/',views.sucess,name='sucess'),
+    
     
 ]
