@@ -24,9 +24,9 @@ def new(request):
         'form': form, 
         'title': 'NewItem'})
 
-def detail(request,pk):
-    artwork = get_object_or_404(Artwork, pk=pk)
-    related_obras = Artwork.objects.filter(category=artwork.category).exclude(pk=pk)
+def detail(request,artwork_id):
+    artwork = get_object_or_404(Artwork, pk=artwork_id)
+    related_obras = Artwork.objects.filter(category=artwork.category).exclude(pk=artwork_id)
     return render(request,'product/detail.html', {
         'artwork':artwork,
         'related_obras':related_obras

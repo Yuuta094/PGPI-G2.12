@@ -22,10 +22,11 @@ from core.views import index, about, contact
 
 from django.urls import include, path
 from core.views import index, about
-
+from shoppingCart.views import ShoppingCart
 
 urlpatterns = [
     path('', include('core.urls')),
+    path('carrito/', include('shoppingCart.urls', namespace='carrito')),
     path('index/', index, name='index'),
     path('dashboard/', include('dashboard.urls')),
     path('product/', include('product.urls')),
