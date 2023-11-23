@@ -83,8 +83,8 @@ def edit(request, pk):
 
 
 @login_required
-def delete(request, pk):
-    obra= get_object_or_404(Artwork, pk=pk)
+def delete(request, artwork_id):
+    obra= get_object_or_404(Artwork, pk=artwork_id)
     obra.delete()
     
     return redirect('dashboard:index')
