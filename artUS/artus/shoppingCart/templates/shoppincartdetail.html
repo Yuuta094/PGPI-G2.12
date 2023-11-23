@@ -1,0 +1,145 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+  <h2 class="text-2xl font-bold mb-4">Carrito de Compras</h2>
+  <table class="w-full text-left table-auto">
+    <thead class="bg-gray-500 text-white">
+      <tr>
+        <th class="px-4 py-2">Producto</th>
+        <th class="px-4 py-2">Cantidad</th>
+        <th class="px-4 py-2">Precio</th>
+        <th class="px-4 py-2">Total</th>
+        <th class="px-4 py-2">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in cart_items %}
+      <tr class="bg-gray-100">
+        <td class="border px-4 py-2">{{ item.artwork.name }}</td>
+        <td class="border px-4 py-2">{{ item.quantity }}</td>
+        <td class="border px-4 py-2">{{ item.artwork.price }}</td>
+        <td class="border px-4 py-2">{{ item.accum_value }}</td>
+                <td class="border px-4 py-2">
+          <div class="flex space-x-2">
+            <form method="post" action="{% url 'carrito:add_from_cart' item.artwork.id %}">
+              {% csrf_token %}
+              <input type="submit" value="+" class="bg-teal-500 hover:bg-teal-700 text-white font-bold py-1 px-2 rounded w-8 h-8">
+            </form>
+            <form method="post" action="{% url 'carrito:substract' item.artwork.id %}">
+              {% csrf_token %}
+              <input type="submit" value="-" class="bg-black hover:bg-gray-700 text-white font-bold py-1 px-2 rounded w-8 h-8">
+            </form>
+            <form method="post" action="{% url 'carrito:remove' item.artwork.id %}" >
+              {% csrf_token %}
+              <input type="submit" value="Eliminar" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded">
+            </form>
+          </div>
+        </td>
+      </tr>
+    {% empty %}
+   
+      <tr>
+        <td colspan="5" class="border px-4 py-2 text-center">No hay productos en el carrito.</td>
+      </tr>
+   
+    {% endfor %}
+    </tbody>
+  </table>
+  <div class="mt-4">
+    <h2 class="text-xl font-bold">Total: {{ total }}</h2>
+  </div>
+
+
+  <body>
+    <div id="paypal-button-container"></div>
+    <p id="result-message"></p>
+    <!-- Replace the "test" client-id value with your client-id -->
+    <script src="https://www.paypal.com/sdk/js?client-id=AW1fMuweVwUuWL6ViQy2l16BjqLn3AD_D-5gY2OZwej0m6G_ZfjS1yvp7QnwUFwaqMIA6FKp5bXFsgk7&components=buttons&enable-funding=venmo,paylater" data-sdk-integration-source="integrationbuilder_sc"></script>
+
+    
+    <script>
+    paypal.Buttons({
+      createOrder: function(data, actions){
+        return actions.order.create({
+          purchase_units:[{
+            amount:{
+              value: total
+            }
+          }]
+        });
+      },
+      onApprove: function(data, actions){
+        return actions.order.capture().then(function(details){
+          sessionStorage.getItem('custumer', details.player.name.given_name);
+          completeOrder()
+          sessionStorage.clear();
+          var url= "{% url 'product:sucess' %}"
+          window.location = url;
+        });
+      }
+    }).render('#paypal-button-container');  
+    
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+          const cookies = document.cookie.split(';');
+          for (let i = 0; i < cookies.length; i++) {
+              const cookie = cookies[i].trim();
+              if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                  break;
+              }
+          }
+      }
+      return cookieValue;
+  }
+  var csrftoken=getCookie('csrftoken')
+
+    function completeOrder() {
+      var url = "{% url 'product:paymentComplete' %}"
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': 'csrftoken',
+            },
+            body: JSON.stringify({'custumer': sessionStorage.getItem('custumer') })
+      })
+    }
+    </script>
+
+  </body>
+
+  <script>
+    var total ='{{ total }}'
+
+    
+
+    //Render the paypal button
+    paypal.Buttons({
+
+      createOrder: function(data, actions){
+        return actions.order.create({
+          purchase_units:[{
+            amount:{
+              value: total
+            }
+          }]
+        });
+      },
+
+      onApprove: function(data, actions){
+        return actions.order.capture().then(function(details){
+          sessionStorage.getItem('custumer', details.player.name.given_name);
+          completeOrder()
+          sessionStorage.clear();
+          var url= "{% url 'product:sucess' %}"
+          window.location = url;
+        });
+      }
+    })
+  </script>
+</body>
+
+
+{% endblock %}

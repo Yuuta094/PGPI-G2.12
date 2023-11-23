@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'core',
     'dashboard',
     'product',
+    'shoppingCart',
 ]
 
 MIDDLEWARE = [
@@ -70,6 +71,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'shoppingCart.context_processor.total_bill',
             ],
         },
     },

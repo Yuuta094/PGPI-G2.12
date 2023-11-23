@@ -10,6 +10,7 @@ import json, random, requests
 
 @login_required
 def new(request):
+    request.session["paypal"]
     if request.method== "POST":
         form= NewItemForm(request.POST, request.FILES)
         
@@ -26,9 +27,9 @@ def new(request):
         'form': form, 
         'title': 'NewItem'})
 
-def detail(request,pk):
-    artwork = get_object_or_404(Artwork, pk=pk)
-    related_obras = Artwork.objects.filter(category=artwork.category).exclude(pk=pk)
+def detail(request,artwork_id):
+    artwork = get_object_or_404(Artwork, pk=artwork_id)
+    related_obras = Artwork.objects.filter(category=artwork.category).exclude(pk=artwork_id)
     return render(request,'product/detail.html', {
         'artwork':artwork,
         'related_obras':related_obras
@@ -93,7 +94,7 @@ def delete(request, pk):
 
 
 def simple_checkout(request):
-    template_name= "buttonsPaypal.html"
+    template_name= "product/buttonsPaypal.html"
     return render(request, template_name)
 
 def paymentComplete(request):
@@ -122,6 +123,6 @@ def paymentComplete(request):
     return redirect('product:sucess')
 
 def sucess(request):
-    template_name= "sucess.html"
+    template_name= "product/sucess.html"
     return render(request, template_name)
     

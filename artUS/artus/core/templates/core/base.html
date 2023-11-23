@@ -6,24 +6,27 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://kit.fontawesome.com/32997379fa.js" crossorigin="anonymous"></script>
 
         <title>{% block title %}{% endblock %} | ArtUS</title>
     </head>
 
-    <body>
+    <body class="flex flex-col min-h-screen">
         <nav class="py-6 px-6 flex justify-between items-center border-b border-gray-200">
-            <a href="/" class = "text-2xl font-bold">ArtUS</a>      
-            
+            <a href="/" class = "text-2xl font-bold">ArtUS</a>   
+                        
             <div class="space-x-6">
-                <a href="{% url 'index' %}" class="text-gray-600 font-semibold hover:text-gray-900">Home</a>
-                <a href="#" class="text-gray-600 font-semibold hover:text-gray-900">Ver</a>
+                
+                
+                <a href="{% url 'shoppingCart:carrito_detail' %}" class="text-gray-600 font-semibold hover:text-gray-900 mr-auto text-2xl">
+                    <i class="fas fa-shopping-cart" style="color: #232424;"></i>
+                </a>
 
             {% if request.user.is_staff %}
                 <a href="{%  url 'product:new' %}" class="text-gray-600 font-semibold hover:text-gray-900">Subir obra</a>
             {% endif %}
 
                 {% if request.user.is_authenticated %}
-                    <a href="{% url 'product:simple_checkout' %}" class="px-6 py-3 text-lg font-semibold bg-teal-500 text-white rounded-xl hover:bg-teal-700">Inbox</a>
                     <a href="{% url 'dashboard:index' %}" class="px-6 py-3 text-lg font-semibold bg-teal-500 text-white rounded-xl hover:bg-teal-700">Mis obras</a>
                     <a href="{% url 'core:logout' %}" class="px-6 py-3 text-lg font-semibold bg-gray-500 text-white rounded-xl hover:bg-gray-700">Cerrar sesión</a>
                 {% else %}
@@ -33,12 +36,12 @@
                 
             </div>
         </nav>
-        <div class="px-6 py-6">
+        <div class="px-6 py-6 flex-grow">
             {% block content %}
             {% endblock %}
         </div>
 
-        <footer class="py-6 px-6 flex justify-between bg-gray-800">
+        <footer class="py-6 px-6 flex justify-between bg-gray-800 mt-auto">
             <div class="w-2/3 pr-10">
                 <h3 class="mb-5 font-semibold text-gray-400">ArtUS</h3>
                 <p class="text-lg text-gray-500">ArtUS es un servicio web que permite 
@@ -52,8 +55,7 @@
                 <h3 class="mb-5 font-semibold text-gray-400">Menú</h3>
 
                 <ul class="space-y-2">
-                    <li><a href="{% url 'index' %}" class="text-lg text-teal-500 hover:text-teal-700">Home</a></li>
-                    <li><a href="{% url 'about' %}" class="text-lg text-teal-500 hover:text-teal-700">About</a></li>
+                   <li><a href="{% url 'about' %}" class="text-lg text-teal-500 hover:text-teal-700">About</a></li>
                     <li><a href="{% url 'contact' %}" class="text-lg text-teal-500 hover:text-teal-700">Contacto</a></li>
                     <li><a href="#" class="text-lg text-teal-500 hover:text-teal-700">Privacidad</a></li>
                     <li><a href="#" class="text-lg text-teal-500 hover:text-teal-700">Términos de uso</a></li>

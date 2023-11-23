@@ -26,4 +26,56 @@
     <button class="mt-6 py-4 px-8 text-lg bg-teal-500 hover:bg-teal-700 rounded-xl text-white">Publicar</button>
 
 </form>
+
+<script src="https://www.paypal.com/sdk/js?client-id=AW1fMuweVwUuWL6ViQy2l16BjqLn3AD_D-5gY2OZwej0m6G_ZfjS1yvp7QnwUFwaqMIA6FKp5bXFsgk7&components=buttons&enable-funding=venmo,paylater" data-sdk-integration-source="integrationbuilder_sc"></script>
+
+<script src="https://www.paypal.com/sdk/js?client-id=AW1fMuweVwUuWL6ViQy2l16BjqLn3AD_D-5gY2OZwej0m6G_ZfjS1yvp7QnwUFwaqMIA6FKp5bXFsgk7&components=buttons&enable-funding=venmo,paylater" data-sdk-integration-source="integrationbuilder_sc"></script>
+
+<script>
+    var total ='{{ total }}'
+
+    function completeOrder() {
+      var url = "{% url 'product:paymentComplete' %}"
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': 'csrftoken',
+            },
+            body: JSON.stringify({'custumer': sessionStorage.getItem('custumer') })
+      })
+    }
+
+    //Render the paypal button
+    paypal.Buttons({
+
+      style:{ 
+        color: 'blue',
+        shape: 'rect',
+        label: 'pay',
+        height: 40,
+      },
+
+      createOrder: function(data, actions){
+        return actions.order.create({
+          purchase_units:[{
+            amount:{
+              value: total
+            }
+          }]
+        });
+      },
+
+      onApprove: function(data, actions){
+        return actions.order.capture().then(function(details){
+          sessionStorage.getItem('custumer', details.player.name.given_name);
+          completeOrder()
+          sessionStorage.clear();
+          var url= "{% url 'product:sucess' %}"
+          window.location = url;
+        });
+      }
+    })
+  </script>
+
 {% endblock%}
