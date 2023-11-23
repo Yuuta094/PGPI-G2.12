@@ -9,10 +9,10 @@
 {% block content %}
 
 <div class="grid grid-cols-5 gap-6">
-    <div class="col-span-3">
-        <img src="{{artwork.image.url}}" class="rounded-xl">
+    <div class="col-span-3 flex justify-center items-center">
+        <img src="{{artwork.image.url}}" class="rounded-xl h-82 w-80">
     </div>
-    <div class="col-span-2 p-6 bg-gray-100 rounded-xl">
+    <div class="col-span-2 p-4 bg-gray-100 rounded-xl">
         <h1 class= "mb-6 text-3xl">{{artwork.name}}</h1>
         <p class="text-gray-500"><strong>Precio: </strong>{{artwork.price}}€</p>
         <p class="text-gray-500"><strong>Autor: </strong>{{artwork.author}}</p>
@@ -29,34 +29,34 @@
                 <button class="py-2 px-2 text-lg bg-teal-500 hover:bg-teal-700 rounded-xl text-white">Añadir al carrito</button>
             </div>
         </form>
-        <div class="mt-6 p-6 bg-white roundd-xl">
-    
+        <div class="mt-4 p-4 bg-white rounded-xl">
+        
         {% if request.user.is_staff %}
-            <a href="{% url 'product:edit' artwork.id %}" class="inline-block mt-6 px-6 py-3 text-xl font-semibold  bg-green-500 text-white rounded-xl">Editar</a>
-            <a href="{% url 'product:delete' artwork.id %}" class="inline-block mt-6 px-6 py-3 text-xl font-semibold  bg-red-500 text-white rounded-xl">Borrar</a>
+            <a href="{% url 'product:edit' artwork.id %}" class="inline-block mt-4 px-4 py-2 text-xl font-semibold bg-green-500 text-white rounded-xl">Editar</a>
+            <a href="{% url 'product:delete' artwork.id %}" class="inline-block mt-4 px-4 py-2 text-xl font-semibold bg-red-500 text-white rounded-xl">Borrar</a>
         </div>
         {% endif %}
-    </div>  
-</div>
-<div class="mt-4 px-4 py-8 bg-gray-100 rounded-xl">
-    <div class="container mx-auto">
-        <h2 class="mb-8 text-2xl text-center">Obras relacionados</h2>
-        <div class="grid grid-cols-3 gap-3">
-            {% for obra in related_obras %}
-                <div class="flex flex-col items-center">
-                    <a href="{% url 'product:detail' obra.id %}">
-                        <div class="w-30 h-30">
-                            <img src="{{ obra.image.url }}" class="rounded-t-xl w-full h-full object-cover">
-                        </div>
-
-                        <div class="p-4 bg-white rounded-b-xl w-full text-center">
-                            <h2 class="text-2xl">{{ obra.name }}</h2>
-                            <p class="text-gray-500">Precio: {{ obra.price }}€</p>
-                        </div>
-                    </a>
-                </div>
-            {% endfor %}
+        </div>  
         </div>
-    </div>
-</div>
+        <div class="mt-2 px-2 py-4 bg-gray-100 rounded-xl">
+        <div class="container mx-auto max-w-md">
+            <h2 class="mb-4 text-2xl text-center">Obras relacionados</h2>
+            <div class="grid grid-cols-3 gap-2">
+                {% for obra in related_obras %}
+                    <div class="flex flex-col items-center">
+                        <a href="{% url 'product:detail' obra.id %}">
+                            <div class="w-30 h-30">
+                                <img src="{{ obra.image.url }}" class="rounded-t-xl h-30 w-30">
+                            </div>
+        
+                            <div class="p-2 bg-white rounded-b-xl w-full text-center">
+                                <h2 class="text-xl">{{ obra.name }}</h2>
+                                <p class="text-gray-500">Precio: {{ obra.price }}€</p>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        </div>
 {% endblock %}
