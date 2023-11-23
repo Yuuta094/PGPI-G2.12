@@ -62,9 +62,9 @@ def search(request):
 
 
 @login_required
-def edit(request, pk):
+def edit(request, artwork_id):
     
-    obra= get_object_or_404(Artwork, pk=pk)
+    obra= get_object_or_404(Artwork, pk=artwork_id)
     
     if request.method == "POST":
         form= EditItemForm(request.POST, request.FILES, instance=obra)
