@@ -13,6 +13,7 @@
         <img src="{{artwork.image.url}}" class="rounded-xl h-82 w-80">
     </div>
     <div class="col-span-2 p-4 bg-gray-100 rounded-xl">
+        
         <h1 class= "mb-6 text-3xl">{{artwork.name}}</h1>
         <p class="text-gray-500"><strong>Precio: </strong>{{artwork.price}}€</p>
         <p class="text-gray-500"><strong>Autor: </strong>{{artwork.author}}</p>
@@ -23,11 +24,14 @@
             </p>   
         {% endif %}  
 
-        <form method="post" action="{% url 'shoppingCart:add_cart' artwork.id %}">
             {% csrf_token %}
             <div class="flex justify-center mt-6">
+                <input type="number" name="quantity" min="1"  value="1" class="mr-2">
                 <button class="py-2 px-2 text-lg bg-teal-500 hover:bg-teal-700 rounded-xl text-white">Añadir al carrito</button>
             </div>
+            {% if artwork.quantity < item.artwork.quantity %}
+                <p class="text-red-500">últimas unidades</p>
+            {% endif %}
         </form>
         <div class="mt-4 p-4 bg-white rounded-xl">
         

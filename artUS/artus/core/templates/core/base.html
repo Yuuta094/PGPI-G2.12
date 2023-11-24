@@ -13,13 +13,15 @@
 
     <body class="flex flex-col min-h-screen">
         <nav class="py-6 px-6 flex justify-between items-center border-b border-gray-200">
+            
             <a href="/" class = "text-2xl font-bold">ArtUS</a>   
                         
             <div class="space-x-6">
                 
                 
-                <a href="{% url 'shoppingCart:carrito_detail' %}" class="text-gray-600 font-semibold hover:text-gray-900 mr-auto text-2xl">
+                <a href="{% url 'carrito:carrito_detail' %}" class="text-gray-600 font-semibold hover:text-gray-900 mr-auto text-2xl">
                     <i class="fas fa-shopping-cart" style="color: #232424;"></i>
+                    <span class="cart-count">{{ cart_count }}</span>
                 </a>
 
             {% if request.user.is_staff %}
@@ -42,7 +44,7 @@
             {% endblock %}
         </div>
 
-        <footer class="py-6 px-6 flex justify-between bg-gray-800 mt-auto">
+        <footer class="py-1 px-6 flex justify-between bg-gray-800 mt-auto">
             <div class="w-2/3 pr-10">
                 <h3 class="mb-5 font-semibold text-gray-400">ArtUS</h3>
                 <p class="text-lg text-gray-500">ArtUS es un servicio web que permite 
