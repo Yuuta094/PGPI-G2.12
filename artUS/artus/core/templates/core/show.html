@@ -1,0 +1,48 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Mostrar usuarios{% endblock %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mostrar usuarios</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <table border="4px" width ="100%" height ="300px" style="border-collapse:collapse; text-align:center;">
+        <thead bgcolor="#88b1f7" height ="40px">
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Email</th>
+                <th scope="col">Contraseña</th>
+                <th scope="col">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr bgcolor="#ffffff">
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.password }}</td>
+                <td>
+                    <button class="py-1 px-3 text-lg bg-teal-500 hover:bg-teal-700 rounded-xl text-white"><a href="/edit/{{ user.id }}">Editar</a></button>
+                    <button class="py-1 px-3 text-lg bg-teal-500 hover:bg-teal-700 rounded-xl text-white"><a href="/delete/{{ user.id }}">Eliminar</a></button>
+
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <br>
+    <br>
+    <button class="py-4 px-8 text-lg bg-teal-500 hover:bg-teal-700 rounded-xl text-white"><a style="color: white;" href="/create/">Añadir usuario</a></button>
+    
+</body>    
+</html>
+{% endblock %}
