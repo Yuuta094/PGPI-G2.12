@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 
 
 def index(request):
-    artworks = Artwork.objects.all()[0:3]
+    artworks = Artwork.objects.all()
     return render(request, 'core/index.html', {
         'artworks': artworks
     })

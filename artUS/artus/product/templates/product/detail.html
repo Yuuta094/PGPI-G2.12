@@ -7,11 +7,12 @@
 {% load static %}
 
 {% block content %}
+
 <div class="grid grid-cols-5 gap-6">
-    <div class="col-span-3">
-        <img src="{{artwork.image.url}}" class="rounded-xl">
+    <div class="col-span-3 flex justify-center items-center">
+        <img src="{{artwork.image.url}}" class="rounded-xl h-82 w-80">
     </div>
-    <div class="col-span-2 p-6 bg-gray-100 rounded-xl">
+    <div class="col-span-2 p-4 bg-gray-100 rounded-xl">
         <h1 class= "mb-6 text-3xl">{{artwork.name}}</h1>
         <p class="text-gray-500"><strong>Precio: </strong>{{artwork.price}}€</p>
         <p class="text-gray-500"><strong>Autor: </strong>{{artwork.author}}</p>
@@ -22,36 +23,40 @@
             </p>   
         {% endif %}  
 
-       
-	    <div class="mt-6 p-6 bg-white roundd-xl">
-    
-   {% if request.user.is_staff %}
-		<a href="{% url 'product:edit' artwork.id %}" class="inline-block mt-6 px-6 py-3 text-xl font-semibold  bg-green-500 text-white rounded-xl">Editar</a>
-		<a href="{% url 'product:delete' artwork.id %}" class="inline-block mt-6 px-6 py-3 text-xl font-semibold  bg-red-500 text-white rounded-xl">Borrar</a>
-    	</div>
-    {% endif %}
-
-        <a href="#" class="inline-block mt-6 px-6 py-3  text-xl font-semibold  bg-teal-500 text-white hover:bg-teal-700 rounded-xl">Contactar manufacturador</a>
-        
-</div>  
-<div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
-    <h2 class="mb-12 text-2xl text-center">Objetos relacionados</h2>
-    <div class="grid grid-cols-3 gap-3">
-        {% for item in related_items %}
-            <div>
-                <a href="{% url 'item:detail' item.id %}">
-                    <div>
-                        <img src="{{ item.image.url }}" class="rounded-t-xl">
-                    </div>
-
-                    <div class="p-6 bg-white rounded-b-xl">
-                        <h2 class="text-2xl">{{ item.name }}</h2>
-                        <p class="text-gray-500">Precio: {{ item.price }}€</p>
-                    </div>
-                </a>
+        <form method="post" action="{% url 'shoppingCart:add' artwork.id %}">
+            {% csrf_token %}
+            <div class="flex justify-center mt-6">
+                <button class="py-2 px-2 text-lg bg-teal-500 hover:bg-teal-700 rounded-xl text-white">Añadir al carrito</button>
             </div>
-        {% endfor %}
-    </div>
-</div>        
-
+        </form>
+        <div class="mt-4 p-4 bg-white rounded-xl">
+        
+        {% if request.user.is_staff %}
+            <a href="{% url 'product:edit' artwork.id %}" class="inline-block mt-4 px-4 py-2 text-xl font-semibold bg-green-500 text-white rounded-xl">Editar</a>
+            <a href="{% url 'product:delete' artwork.id %}" class="inline-block mt-4 px-4 py-2 text-xl font-semibold bg-red-500 text-white rounded-xl">Borrar</a>
+        </div>
+        {% endif %}
+        </div>  
+        </div>
+        <div class="mt-2 px-2 py-4 bg-gray-100 rounded-xl">
+        <div class="container mx-auto max-w-md">
+            <h2 class="mb-4 text-2xl text-center">Obras relacionados</h2>
+            <div class="grid grid-cols-3 gap-2">
+                {% for obra in related_obras %}
+                    <div class="flex flex-col items-center">
+                        <a href="{% url 'product:detail' obra.id %}">
+                            <div class="w-30 h-30">
+                                <img src="{{ obra.image.url }}" class="rounded-t-xl h-30 w-30">
+                            </div>
+        
+                            <div class="p-2 bg-white rounded-b-xl w-full text-center">
+                                <h2 class="text-xl">{{ obra.name }}</h2>
+                                <p class="text-gray-500">Precio: {{ obra.price }}€</p>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        </div>
 {% endblock %}
