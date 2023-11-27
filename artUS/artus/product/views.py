@@ -1,9 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404,redirect
 from django.contrib.auth.decorators import login_required
-
 from .forms import NewItemForm,EditItemForm
-from .models import Category, Artwork, Order, Order_Detail
-import json, random, requests
+from .models import Category, Artwork
+
 
 
 # Create your views here.
@@ -92,37 +91,4 @@ def delete(request, pk):
     
     return redirect('dashboard:index')
 
-
-def simple_checkout(request):
-    template_name= "product/buttonsPaypal.html"
-    return render(request, template_name)
-
-def paymentComplete(request):
-    body= json.loads(request.body)
-    sess= request.session.get("data",{"items":[]})
-    productos_carro=sess["items"]
-    
-    #Datos cabecera
-    oc=Order()
-    oc.customer=body['customer']  #el cliente
-    oc.ordernum=random.randint(10000,99999)
-    oc.save()
-    
-    #Datos detalles
-    for item in productos_carro:
-        od=Order_Detail
-        prod= Artwork.objects.get(slug=item) #nombre del producto/s
-        od.product= prod
-        od.cant=1
-        od.order=oc
-        od.save()
-        
-    #Borrar session para empezar de 0
-    del  request.session['data']
-    
-    return redirect('product:sucess')
-
-def sucess(request):
-    template_name= "product/sucess.html"
-    return render(request, template_name)
     

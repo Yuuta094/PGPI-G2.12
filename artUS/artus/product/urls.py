@@ -13,9 +13,6 @@ urlpatterns = [
     path('carrito/<int:artwork_id>/add', add_shoppingcart_from_product_detail, name='add_from_product_detail'),
     path('<int:artwork_id>/delete',delete , name='delete'),
     path('<int:artwork_id>/substract', substract, name='substract'),
-    path('simple_checkout/',views.simple_checkout,name='simple_checkout'), #TODO cambiar 
-    path('paymentComplete/',views.paymentComplete,name='paymentComplete'),
-    path('sucess/',views.sucess,name='sucess'),
-    
+ 
     
 ]
