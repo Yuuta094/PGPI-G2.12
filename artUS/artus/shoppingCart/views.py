@@ -1,7 +1,7 @@
 from django.shortcuts import render, HttpResponse, redirect
 from core.models import Customer
 
-from .forms import PurchaseForm
+from .forms import PurchaseForm, PurchaseNotLoggedForm
 from .models import ShoppingCart, CartItem, Order, Order_Detail
 from product.models import Artwork
 from django.contrib.auth.decorators import login_required
@@ -75,33 +75,49 @@ def carrito_detail(request):
     shopping_cart, created = ShoppingCart.objects.get_or_create(user=request.user)
     cart_items = CartItem.objects.filter(shopping_cart=shopping_cart)
     total = calculate_total(cart_items)
-    if request.method == 'POST':
-        form = PurchaseForm(request.POST)
-        if form.is_valid():
-            order = Order()
-            order.ordernum = random.randint(10000, 99999)
-            order.customer = request.user.username #the future order model should link the customer if possible, not just a string
-            order.telephone = form.cleaned_data['telephone']
-            order.address = form.cleaned_data['address']
-            order.country = form.cleaned_data['country']
-            order.city = form.cleaned_data['city']
-            order.zip_code = form.cleaned_data['zip_code']
-            order.save()
-            if 'save_data' in request.POST:
-                customer, created = Customer.objects.get_or_create(user=request.user)
-                customer.telephone = form.cleaned_data['telephone']
-                customer.address = form.cleaned_data['address']
-                customer.country = form.cleaned_data['country']
-                customer.city = form.cleaned_data['city']
-                customer.zip_code = form.cleaned_data['zip_code']
-                customer.save()
-            # Procesar el pago contrareembolso
-    else:
-        if hasattr(request.user, 'customer'):
-            customer = request.user.customer
-            form = PurchaseForm(initial={'telephone': customer.telephone, 'address': customer.address, 'country': customer.country, 'city': customer.city, 'zip_code': customer.zip_code})
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            form = PurchaseForm(request.POST)
+            if form.is_valid():
+                order = Order()
+                order.ordernum = random.randint(10000, 99999)
+                order.customer = request.user.email #the future order model should link the customer if possible, not just a string
+                order.telephone = form.cleaned_data['telephone']
+                order.address = form.cleaned_data['address']
+                order.country = form.cleaned_data['country']
+                order.city = form.cleaned_data['city']
+                order.zip_code = form.cleaned_data['zip_code']
+                order.save()
+                if 'save_data' in request.POST:
+                    customer, created = Customer.objects.get_or_create(user=request.user)
+                    customer.telephone = form.cleaned_data['telephone']
+                    customer.address = form.cleaned_data['address']
+                    customer.country = form.cleaned_data['country']
+                    customer.city = form.cleaned_data['city']
+                    customer.zip_code = form.cleaned_data['zip_code']
+                    customer.save()
+                # Procesar el pago contrareembolso
         else:
-            form = PurchaseForm()
+            if hasattr(request.user, 'customer'):
+                customer = request.user.customer
+                form = PurchaseForm(initial={'telephone': customer.telephone, 'address': customer.address, 'country': customer.country, 'city': customer.city, 'zip_code': customer.zip_code})
+            else:
+                form = PurchaseForm()
+    else:
+        if request.method == 'POST':
+            form = PurchaseNotLoggedForm(request.POST)
+            if form.is_valid():
+                order = Order()
+                order.ordernum = random.randint(10000, 99999)
+                order.customer = form.cleaned_data['customer'] #email
+                order.telephone = form.cleaned_data['telephone']
+                order.address = form.cleaned_data['address']
+                order.country = form.cleaned_data['country']
+                order.city = form.cleaned_data['city']
+                order.zip_code = form.cleaned_data['zip_code']
+                order.save()
+        else:
+            form = PurchaseNotLoggedForm()
     return render(request, 'shoppincartdetail.html', {'cart_items': cart_items, 'total': total, 'form': form})
 
 def paymentComplete(request):

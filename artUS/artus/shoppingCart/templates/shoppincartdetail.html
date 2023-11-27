@@ -50,6 +50,7 @@
   </div>
   <div class="flex justify-between">
     <div class="w-1/2">
+      {% if user.is_authenticated %}
       <h2 class="text-xl font-bold">Pagar contrareembolso</h2>
       <form method="post">
         {% csrf_token %}
@@ -66,6 +67,18 @@
           </button>
         </div>
       </form>
+      {% else %}
+      <h2 class="text-xl font-bold">Pagar contrareembolso</h2>
+      <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div>
+          <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Pagar contrareembolso
+          </button>
+        </div>
+      </form>      
+      {% endif %}
     </div>
 
     <div class="w-1/2">
