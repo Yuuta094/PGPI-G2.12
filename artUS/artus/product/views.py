@@ -1,13 +1,15 @@
 from django.shortcuts import render, redirect, get_object_or_404,redirect
 from django.contrib.auth.decorators import login_required
-
 from .forms import NewItemForm,EditItemForm
 from .models import Category, Artwork
+
+
 
 # Create your views here.
 
 @login_required
 def new(request):
+    request.session["paypal"]
     if request.method== "POST":
         form= NewItemForm(request.POST, request.FILES)
         
@@ -79,3 +81,5 @@ def delete(request, artwork_id):
     obra= get_object_or_404(Artwork, pk=artwork_id)
     obra.delete()
     return redirect('dashboard:index')
+
+    

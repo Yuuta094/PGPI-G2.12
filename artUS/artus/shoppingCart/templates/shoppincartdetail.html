@@ -37,19 +37,112 @@
         </td>
       </tr>
     {% empty %}
+   
       <tr>
         <td colspan="5" class="border px-4 py-2 text-center">No hay productos en el carrito.</td>
       </tr>
+   
     {% endfor %}
     </tbody>
   </table>
   <div class="mt-4">
     <h2 class="text-xl font-bold">Total: {{ total }}</h2>
   </div>
+  <div class="flex justify-between">
+    <div class="w-1/2">
+      {% if user.is_authenticated %}
+      <h2 class="text-xl font-bold">Pagar contrareembolso</h2>
+      <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div>
+          <label for="save_data">
+              <input type="checkbox" name="save_data" id="save_data">
+              Guardar estos datos para futuras compras
+          </label>
+        </div>
+        <div>
+          <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Pagar contrareembolso
+          </button>
+        </div>
+      </form>
+      {% else %}
+      <h2 class="text-xl font-bold">Pagar contrareembolso</h2>
+      <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div>
+          <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Pagar contrareembolso
+          </button>
+        </div>
+      </form>      
+      {% endif %}
+    </div>
 
-  
-  
-  
+    <div class="w-1/2">
+        <h2 class="text-xl font-bold">Pagar con PayPal</h2>
+    <div id="paypal-button-container"></div>
+        <!-- Replace the "test" client-id value with your client-id -->
+        <script src="https://www.paypal.com/sdk/js?client-id=AW1fMuweVwUuWL6ViQy2l16BjqLn3AD_D-5gY2OZwej0m6G_ZfjS1yvp7QnwUFwaqMIA6FKp5bXFsgk7&components=buttons&enable-funding=paylater,venmo,card&currency=EUR" data-sdk-integration-source="integrationbuilder_sc"></script>
+      </div>
+    </div>
+  </div>
+
+    <script>
+      function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+          var cookies = document.cookie.split(';');
+          for (let i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+            }
+          }
+        }
+        return cookieValue;
+      }
+    
+      var csrftoken = getCookie('csrftoken');
+      var total = '{{ total }}';
+    
+      function completeOrder() {
+        var url = "{% url 'shoppingCart:paymentComplete' %}";
+        fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-type': 'application/json',
+            'X-CSRFToken': csrftoken,
+          },
+          body: JSON.stringify({ 'customer': sessionStorage.getItem('customer') })
+        });
+      }
+    
+      // Render the PayPal button
+      paypal.Buttons({
+        createOrder: function (data, actions) {
+          return actions.order.create({
+            purchase_units: [{
+              amount: {
+                value: total
+              }
+            }]
+          });
+        },
+        onApprove: function (data, actions) {
+          return actions.order.capture().then(function (details) {
+            alert('Transacción completada por ' + details.payer.name.given_name);
+            completeOrder();
+            sessionStorage.clear();
+            alert('Tu compra se ha efectuado con éxito ' + details.payer.name.given_name);
+
+          });
+        }
+      }).render('#paypal-button-container');
+    </script>
 
   <div class="mt-4 flex justify-between">
     <div>
