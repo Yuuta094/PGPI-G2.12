@@ -18,6 +18,10 @@ def about(request):
     return render(request, 'core/about.html', {
     })
     
+def termsofuse(request):
+    return render(request, 'core/termsofuse.html', {
+    })    
+    
 def signup(request):
     if request.method == 'POST':
         form = SignupForm(request.POST)
