@@ -30,6 +30,11 @@
         
                     <div class="p-6 bg-white rounded-b-xl">
                         <h2 class="text-2xl">{{ artwork.name }}</h2>
+                        
+                        {% if artwork.quantity == 0 %}
+                            <p style="color: red; font-weight: bold;">AGOTADO</p>
+                        {% endif %}
+                        
                         <p class="text-gray-500">Precio: {{ artwork.price }} €</p>
                     </div>
                 </a>
