@@ -5,12 +5,6 @@ from product.models import Artwork
 from product.forms import EditItemForm
  
 
-
-
-# Create your views here.
-
-
-
 @login_required
 def index(request):   # created_by = models.ForeignKey(User, on_delete=models.CASCADE)
 

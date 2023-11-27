@@ -62,33 +62,24 @@ def search(request):
         'max_price':max_price
     })
 
-
 @login_required
 def edit(request, artwork_id):
-    
     obra= get_object_or_404(Artwork, pk=artwork_id)
-    
     if request.method == "POST":
         form= EditItemForm(request.POST, request.FILES, instance=obra)
-        
         if form.is_valid():
             form.save()
-            
             return redirect('product:detail', pk=obra.id)
     else:
         form = EditItemForm(instance=obra)
-    
     return render(request, 'product/form.html',{
         'form': form, 
         'title': 'Edit Item'})
     
-
-
 @login_required
 def delete(request, artwork_id):
     obra= get_object_or_404(Artwork, pk=artwork_id)
     obra.delete()
-    
     return redirect('dashboard:index')
 
     
