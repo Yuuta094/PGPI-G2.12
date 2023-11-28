@@ -31,7 +31,7 @@
         {% if artwork.quantity == 0 %}
           <p class="text-red-500 mt-2">Lo sentimos mucho, este producto está temporalmente agotado.</p>
         {% else %}
-          <form action="{% url 'product:add_to_cart' artwork.id %}" method="POST">
+          <form action="{% url 'product:add_from_product_detail' artwork.id %}" method="POST">
             {% csrf_token %}
 
             <div class="mt-4">
