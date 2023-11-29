@@ -4,8 +4,9 @@ from django.contrib.auth.models import User
 from .forms import SignupForm, UserForm, LoginForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-
-
+from .forms import EditForm
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
 def index(request):
     artworks = Artwork.objects.all()
     return render(request, 'core/index.html', {'artworks': artworks})
@@ -75,3 +76,15 @@ def destroy_user(request, user_id):
     user = get_object_or_404(User, pk=user_id)
     user.delete()
     return redirect("/show/")
+
+@login_required
+def edit_profile(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  
+            return redirect('/edit_profile/')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'core/editProfile.html', {'form': form})
