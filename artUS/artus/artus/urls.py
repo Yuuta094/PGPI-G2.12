@@ -18,18 +18,20 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path,include
-from core.views import index, about, contact
+from core.views import index, about, contact, termsofuse
 
 from django.urls import include, path
 from core.views import index, about
-
+from shoppingCart.views import ShoppingCart
 
 urlpatterns = [
     path('', include('core.urls')),
+    path('carrito/', include('shoppingCart.urls', namespace='carrito')),
     path('index/', index, name='index'),
     path('dashboard/', include('dashboard.urls')),
     path('product/', include('product.urls')),
     path('about/', about, name='about'),
     path('contact/', contact, name='contact'),
+    path('termsofuse/', termsofuse, name='termsofuse'),
     path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

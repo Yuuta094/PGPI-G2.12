@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'core',
     'dashboard',
     'product',
+    'shoppingCart',
 ]
 
 MIDDLEWARE = [
@@ -70,6 +71,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'shoppingCart.context_processor.total_bill',
+                'shoppingCart.context_processor.cart_count',
             ],
         },
     },
@@ -133,3 +136,5 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+APPEND_SLASH = False
