@@ -4,9 +4,21 @@ from django.contrib.auth.models import User
 from .forms import SignupForm, UserForm, LoginForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .forms import EditForm
-from django.contrib.auth import update_session_auth_hash
-from django.contrib.auth.forms import PasswordChangeForm
+
+
+@login_required
+def login_view(request):
+    if request.method == "POST":
+        email = request.POST['email']
+        password = request.POST['password']
+        user = authenticate(request, email=email, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect("/show/")
+        else:
+            return render(request, "core/login.html", {"error": "Invalid username/password."})
+    return render(request, "core/login.html", {})
+
 def index(request):
     artworks = Artwork.objects.all()
     return render(request, 'core/index.html', {'artworks': artworks})
