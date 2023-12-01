@@ -88,3 +88,51 @@ def delete(request, pk):
     obra.delete()
     
     return redirect('dashboard:index')
+
+
+
+#Views Categorys
+def stillLife(request):
+    artworks = Artwork.objects.filter(category=Category.STILL_LIFE)
+    return render(request, 'product/stillLife.html', {
+        'artworks': artworks,
+    })
+
+def portrait(request):
+    artworks = Artwork.objects.filter(category=Category.PORTRAIT)
+    return render(request, 'product/portrait.html', {
+        'artworks': artworks,
+    })
+
+def landscape(request):
+    artworks = Artwork.objects.filter(category=Category.LANDSCAPE)
+    return render(request, 'product/landscape.html', {
+        'artworks': artworks,
+    })
+    
+def abstract(request):
+    artworks = Artwork.objects.filter(category=Category.ABSTRACT)
+    return render(request, 'product/abstract.html', {
+        'artworks': artworks,
+    })
+
+def figurative(request):
+    artworks = Artwork.objects.filter(category=Category.FIGURATIVE)
+    return render(request, 'product/figurative.html', {
+        'artworks': artworks,
+    })
+
+def surrealism(request):
+    artworks = Artwork.objects.filter(category=Category.SURREALISM)
+    return render(request, 'product/surrealism.html', {
+        'artworks': artworks,
+    })
+
+def other(request):
+    artworks = Artwork.objects.filter(category=Category.OTHER)
+    return render(request, 'product/other.html', {
+        'artworks': artworks,
+    })    
+    
+    
+ 

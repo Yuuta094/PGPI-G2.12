@@ -3,7 +3,56 @@
 {% block title %}Bienvenid@{% endblock %}
 
 {% block content %}
-    <div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
+<div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
+        <div class='categoria mb-5'>
+            <h2 class="text-2xl">Categrías destacadas</h2>
+        </div>
+
+        
+
+        <div class="flex mb-5">     
+
+            <form action="{% url 'product:stillLife' %}" method="GET" class="mr-4" >
+                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                    <h1>Still Life</h1>
+                </button>
+            </form>
+        
+            <form action="{% url 'product:portrait' %}" method="GET" class="categorias mr-4">
+                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                    <h1>Retrato</h1>
+                </button>
+            </form>
+        
+            <form action="{% url 'product:landscape' %}" method="GET" class="categorias mr-4">
+                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 ">
+                       <h1>Paisaje</h1>
+                </button>
+            </form>
+            <form action="{% url 'product:abstract' %}" method="GET" class="categorias mr-4">
+                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 ">
+                     <h1>Abstracto</h1>
+                </button>
+            </form>
+            <form action="{% url 'product:figurative' %}" method="GET" class="categorias mr-4">
+                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 ">
+                       <h1>Figurativo</h1>
+                </button>
+            </form>
+            <form action="{% url 'product:surrealism' %}" method="GET" class="categorias mr-4">
+                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 ">
+                       <h1>Surrealismo</h1>
+                </button>
+            </form>
+            <form action="{% url 'product:other' %}" method="GET" class="categorias mr-4">
+                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 ">
+                       <h1>Otros</h1>
+                </button>
+            </form>
+        </div>
+
+
+
         <div class="flex justify-center mb-12">
             <div class="flex-grow text-center">
                 <h2 class="text-2xl">Productos</h2>
@@ -36,7 +85,6 @@
             </div>
         {% endfor %}
         </div>
-
     </div>
 
 {% endblock %}
