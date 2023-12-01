@@ -3,7 +3,7 @@ from django.contrib.auth import views as auth_views
 from django.contrib.auth.views import logout_then_login
 from . import views
 from .forms import LoginForm
-
+from .views import edit_profile
 
 app_name = 'core'
 
@@ -16,5 +16,6 @@ urlpatterns = [
     path('show/', views.show_users, name='show'),
     path('edit/<int:user_id>', views.edit_user, name='edit'),
     path('delete/<int:user_id>', views.destroy_user, name='delete'),
+     path('edit_profile/', edit_profile, name='edit_profile'),
 
 ]
