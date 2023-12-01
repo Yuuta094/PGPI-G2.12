@@ -28,22 +28,19 @@
           </p>
         {% endif %}
 
-        {% if artwork.quantity == 0 %}
-          <p class="text-red-500 mt-2">Lo sentimos mucho, este producto está temporalmente agotado.</p>
-        {% else %}
+        {% if artwork.quantity > 0 %}
           <form action="{% url 'product:add_from_product_detail' artwork.id %}" method="POST">
             {% csrf_token %}
-
             <div class="mt-4">
-              <input type="number" name="quantity" min="1" value="1" class="rounded-l-lg bg-gray-100 p-2">
+              <input type="number" name="quantity" min="1" max="{{ artwork.quantity }}" value="1" class="rounded-l-lg bg-gray-100 p-2">
               <button type="submit" class="py-2 px-4 text-lg bg-teal-500 hover:bg-teal-700 rounded-r-lg text-white">Añadir al carrito</button>
             </div>
           </form>
-
-          {% if artwork.quantity < item.artwork.quantity %}
-            <p class="text-red-500 mt-2">Últimas unidades</p>
-          {% endif %}
+        {% elif quantity > artwork.quantity %}
+          <p class="text-red-500 mt-2">Lo sentimos mucho, este producto está temporalmente agotado.</p>
+        {% else  %}
         {% endif %}
+
       </div>
     </div>
   </div>

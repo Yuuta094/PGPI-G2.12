@@ -2,31 +2,32 @@ from django.shortcuts import render, HttpResponse, redirect
 from core.models import Customer
 
 from .forms import PurchaseForm, PurchaseNotLoggedForm
-from .models import ShoppingCart, CartItem, Order, Order_Detail
+from .models import ShoppingCart, CartItem, Order, Order_Detail, orderStatus
 from product.models import Artwork
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 import json, random
 
-
 from decimal import Decimal
 from django.contrib import messages
+
 
 def add_shoppingcart_from_product_detail(request, artwork_id):
     shopping_cart = request.session.get('shopping_cart', {})
     artwork = Artwork.objects.get(id=artwork_id)
-    quantity = int(request.POST.get('quantity', 1))  # get the quantity from the form
-
-   
+    quantity = int(request.POST.get('quantity', 1))  
     if quantity > artwork.quantity:
         messages.error(request, 'La cantidad solicitada excede la cantidad disponible de esta obra.')
         return redirect('product:detail', artwork_id=artwork_id)
-
     if str(artwork_id) in shopping_cart:
         shopping_cart[str(artwork_id)]['quantity'] += quantity
         shopping_cart[str(artwork_id)]['accum_value'] = float(shopping_cart[str(artwork_id)]['accum_value']) + float(artwork.price) * quantity
+        artwork.quantity -= quantity
+        artwork.save()
     else:
         shopping_cart[str(artwork_id)] = {'accum_value': float(artwork.price) * quantity, 'quantity': quantity}
+        artwork.quantity -= quantity
+        artwork.save()
     request.session['shopping_cart'] = shopping_cart
     request.session.modified = True
     return redirect('product:detail', artwork_id=artwork_id)
@@ -35,17 +36,19 @@ def add_shoppingcart_from_product_detail(request, artwork_id):
 def add_shoppingcart_from_cart(request, artwork_id):
     shopping_cart = request.session.get('shopping_cart', {})
     artwork = Artwork.objects.get(id=artwork_id)
-
-    # Check if requested quantity exceeds available quantity
-    if str(artwork_id) in shopping_cart and shopping_cart[str(artwork_id)]['quantity'] + 1 > artwork.quantity:
-        messages.error(request, 'La cantidad solicitada excede la cantidad disponible de esta obra.')
-        return redirect('shoppingCart:carrito_detail')
-
     if str(artwork_id) in shopping_cart:
-        shopping_cart[str(artwork_id)]['quantity'] += 1
-        shopping_cart[str(artwork_id)]['accum_value'] = float(shopping_cart[str(artwork_id)]['accum_value']) + float(artwork.price)
+        if artwork.quantity < 1 and shopping_cart[str(artwork_id)]['quantity'] > artwork.quantity:
+            messages.error(request, 'La cantidad solicitada excede la cantidad disponible de esta obra.')
+            return redirect('shoppingCart:carrito_detail')
+        else: 
+            shopping_cart[str(artwork_id)]['quantity'] += 1
+            shopping_cart[str(artwork_id)]['accum_value'] = float(shopping_cart[str(artwork_id)]['accum_value']) + float(artwork.price)
+            artwork.quantity -= 1
+            artwork.save()
     else:
         shopping_cart[str(artwork_id)] = {'accum_value': float(artwork.price), 'quantity': 1}
+        artwork.quantity -= 1
+        artwork.save()
     request.session['shopping_cart'] = shopping_cart
     request.session.modified = True
     return redirect('shoppingCart:carrito_detail')
@@ -53,20 +56,30 @@ def add_shoppingcart_from_cart(request, artwork_id):
 
 def delete(request, artwork_id):
     shopping_cart = request.session.get('shopping_cart', {})
+    artwork = Artwork.objects.get(id=artwork_id)
     if str(artwork_id) in shopping_cart:
+        quantity = shopping_cart[str(artwork_id)]['quantity']
         del shopping_cart[str(artwork_id)]
         request.session['shopping_cart'] = shopping_cart
         request.session.modified = True
+        artwork.quantity += int(quantity)
+        artwork.save()     
     return redirect('shoppingCart:carrito_detail')
+
 
 def substract(request, artwork_id):
     shopping_cart = request.session.get('shopping_cart', {})
+    artwork = Artwork.objects.get(id=artwork_id)
     if str(artwork_id) in shopping_cart:
         if shopping_cart[str(artwork_id)]['quantity'] > 1:
             shopping_cart[str(artwork_id)]['quantity'] -= 1
             shopping_cart[str(artwork_id)]['accum_value'] -= float(Artwork.objects.get(id=artwork_id).price)
+            artwork.quantity += 1
+            artwork.save()
         else:
             del shopping_cart[str(artwork_id)]
+            artwork.quantity += 1
+            artwork.save()
         request.session['shopping_cart'] = shopping_cart
         request.session.modified = True
     return redirect('shoppingCart:carrito_detail')
@@ -80,6 +93,7 @@ def clean(request):
 def calculate_total(cart_items):
     return sum(item.accum_value for item in cart_items)    
 
+
 def carrito_detail(request):
     shopping_cart = request.session.get('shopping_cart', {})
     cart_items = [CartItem(artwork_id=artwork_id, **data) for artwork_id, data in shopping_cart.items()]
@@ -91,6 +105,7 @@ def carrito_detail(request):
                 order = Order()
                 order.ordernum = random.randint(10000, 99999)
                 order.customer = request.user.email #the future order model should link the customer if possible, not just a string
+                order.total_price = float(total)
                 order.telephone = form.cleaned_data['telephone']
                 order.address = form.cleaned_data['address']
                 order.country = form.cleaned_data['country']
@@ -129,6 +144,7 @@ def carrito_detail(request):
             form = PurchaseNotLoggedForm()
     return render(request, 'shoppincartdetail.html', {'cart_items': cart_items, 'total': total, 'form': form})
 
+
 def paymentComplete(request):
     body = json.loads(request.body)
     sess = request.session.get("data", {"items": []})
@@ -156,9 +172,20 @@ def paymentComplete(request):
     
     # Borrar sesión para empezar de cero
     # del request.session['data']  # Puede que haya que borrarlo 
-    
     return redirect('/')
 
-def sucess(request):
-    template_name= "shoppingCart/sucess.html"
+
+def success(request):
+    template_name= "shoppingCart/success.html"
     return render(request, template_name)
+
+
+def myOrder(request):
+    order = Order.objects.filter(customer=request.user)
+    return render(request, "myOrder.html", locals())
+
+
+def userOrderTrack(request, order_id):
+    order = Order.objects.get(id=order_id)
+    orderstatus = orderStatus
+    return render(request, "userOrderTrack.html", locals())
