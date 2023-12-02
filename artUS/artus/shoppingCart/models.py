@@ -22,7 +22,7 @@ class Order(models.Model):
     customer = models.CharField(max_length=200, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     status = models.IntegerField(choices=orderStatus, default=1) 
-    total_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0, blank=True)
     
     address = models.CharField(max_length=100, blank=True)
     country = models.CharField(max_length=50, blank=True)
@@ -31,7 +31,7 @@ class Order(models.Model):
     telephone = models.CharField(max_length=20, blank=True)
 
     def __str__(self):
-     return self.ordernum
+     return self.created.strftime('%b %e %Y %H:%M:%S')
 
 
 class Order_Detail(models.Model):
@@ -40,4 +40,4 @@ class Order_Detail(models.Model):
     order = models.ForeignKey(Order, on_delete= models.CASCADE)
     
     def __str__(self):
-        return self.product
+        return self.order.customer + ' - ' + self.product.name + ' - ' + str(self.cant) + ' - ' + str(self.order.created)

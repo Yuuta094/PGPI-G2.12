@@ -97,7 +97,7 @@ def calculate_total(cart_items):
 def carrito_detail(request):
     shopping_cart = request.session.get('shopping_cart', {})
     cart_items = [CartItem(artwork_id=artwork_id, **data) for artwork_id, data in shopping_cart.items()]
-    total = calculate_total(cart_items)
+    total = float(calculate_total(cart_items))
     if request.user.is_authenticated:
         if request.method == 'POST':
             form = PurchaseForm(request.POST)
@@ -105,13 +105,15 @@ def carrito_detail(request):
                 order = Order()
                 order.ordernum = random.randint(10000, 99999)
                 order.customer = request.user.email #the future order model should link the customer if possible, not just a string
-                order.total_price = float(total)
+                order.total_price = total
                 order.telephone = form.cleaned_data['telephone']
                 order.address = form.cleaned_data['address']
                 order.country = form.cleaned_data['country']
                 order.city = form.cleaned_data['city']
                 order.zip_code = form.cleaned_data['zip_code']
+                order_detail = [Order_Detail(product=item.artwork, cant=item.quantity, order=order) for item in cart_items]
                 order.save()
+                order_detail = Order_Detail.objects.bulk_create(order_detail)
                 if 'save_data' in request.POST:
                     customer, created = Customer.objects.get_or_create(user=request.user)
                     customer.telephone = form.cleaned_data['telephone']
@@ -121,6 +123,7 @@ def carrito_detail(request):
                     customer.zip_code = form.cleaned_data['zip_code']
                     customer.save()
                 # Procesar el pago contrareembolso
+                return redirect(reverse('shoppingCart:my-order'))
         else:
             if hasattr(request.user, 'customer'):
                 customer = request.user.customer
@@ -175,13 +178,9 @@ def paymentComplete(request):
     return redirect('/')
 
 
-def success(request):
-    template_name= "shoppingCart/success.html"
-    return render(request, template_name)
-
-
 def myOrder(request):
-    order = Order.objects.filter(customer=request.user)
+    orders = Order.objects.filter(customer=request.user.email)
+    orderdetails = Order_Detail.objects.all()
     return render(request, "myOrder.html", locals())
 
 

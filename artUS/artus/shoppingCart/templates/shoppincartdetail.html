@@ -149,18 +149,4 @@
         }
       }).render('#paypal-button-container');
     </script>
-
-  <div class="mt-4 flex justify-between">
-    <div>
-      {% if request.user.is_authenticated %}
-        <a href="#" class="px-6 py-3 text-lg font-semibold bg-teal-500 text-white rounded-xl hover:bg-teal-700">Continuar</a>
-      {% else %}
-        <p class="mb-2">¿Estás registrado?</p>
-        <a href="{% url 'core:login' %}" class="px-4 py-2 text-sm font-semibold bg-gray-500 text-white rounded-xl hover:bg-gray-700">Iniciar sesión</a>
-      {% endif %}
-    </div>
-    <div class="ml-auto">
-      <button href="#" class="px-6 py-3 text-lg font-semibold bg-teal-500 text-white rounded-xl hover:bg-teal-700">Continuar</button>
-    </div>
-  </div>
 {% endblock %}

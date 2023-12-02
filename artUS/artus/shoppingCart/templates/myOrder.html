@@ -14,28 +14,33 @@
     <div class="card shadow m-5" id="myorder">
         <div class="card-body">
             <div class="container-fluid">
-                <h3 style="font-family:roman">Mi Pedido</h3>
                 <table class="table table-bordered" style="width:100%">
                     <thead>
                     <tr>
                         <th>#</th>
-                        <th>Id</th>
                         <th>Precio</th>
                         <th>Estado</th>
                         <th>Fecha de compra</th>
-                        <th>Acciones</th>
+                        <th>Detalles</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {% for i in order %}
-                    <tr>
+                    {% for i in orders %}
+                    <tr style="border-bottom: 1px solid #000;">
                         <td>{{forloop.counter}}</td>
-                        <td>{{i.id}}</td>
                         <td>{{i.total_price}}</td>
                         <td><a href="" class="btn btn-primary" title="Ver estado del pedido">{{i.get_status_display}}</a></td>
                         <td>{{i.created}}</td>
                         <td>
-                            <a href="" class="btn btn-success" title="Return Order"><i class="fa fa-refresh"></i></a>
+                            {% for detail in orderdetails%}
+                                {% if detail.order.id == i.id %}
+                                    <li class="border p-4 rounded-md flex items-start">
+                                        <img src="{{ detail.product.image.url }}" alt="{{ detail.product.name }}" class="w-16 h-16 object-cover mr-4">
+                                        <p class="text-grey-darker">{{detail.product.name}} x {{detail.cant}}</p>
+                                        <br>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
                         </td>
                     </tr>
                     {% endfor %}

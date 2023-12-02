@@ -12,7 +12,6 @@ urlpatterns = [
     path('subtract/<int:artwork_id>/', views.substract, name='substract'),
     path('delete/<int:artwork_id>/', views.delete, name='delete'),
     path('paymentComplete/',views.paymentComplete,name='paymentComplete'),
-    path('success/',views.success,name='success'),
     path('user-order-track/<int:order_id>/', views.userOrderTrack, name="user-order-track"),
     path('my-order/', views.myOrder, name="my-order"),
 
