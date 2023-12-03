@@ -14,5 +14,7 @@ urlpatterns = [
     path('paymentComplete/',views.paymentComplete,name='paymentComplete'),
     path('user-order-track/<int:order_id>/', views.userOrderTrack, name="user-order-track"),
     path('my-order/', views.myOrder, name="my-order"),
+    path('user-feedback/<int:order_id>/', views.user_feedback, name="user-feedback"),
+    path('select-order/', views.unauthenticatedOrderTrack, name="select-order"),
 
 ]

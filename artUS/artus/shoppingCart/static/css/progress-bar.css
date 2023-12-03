@@ -42,13 +42,6 @@ ul.progress-bar-1 {
     height: 100vh;
   }
   
-  
-  /*
-  * Scut, a collection of Sass utilities
-  * to ease and improve our implementations of common style-code patterns.
-  * v1.3.0
-  * Docs at https://davidtheclark.github.io/scut
-  */
   .ProgressBar {
     margin: 0 auto;
     padding: 2em 0 3em;
@@ -63,6 +56,7 @@ ul.progress-bar-1 {
     position: relative;
     width: 100%;
   }
+
   .ProgressBar-step:before, .ProgressBar-step:after {
     content: "";
     height: 0.5em;
@@ -85,7 +79,7 @@ ul.progress-bar-1 {
   .ProgressBar-step.is-complete + .ProgressBar-step.is-current:after, .ProgressBar-step.is-complete + .ProgressBar-step.is-complete:after {
     width: 100%;
   }
-  
+
   .ProgressBar-icon {
     width: 1.5em;
     height: 1.5em;
@@ -95,9 +89,9 @@ ul.progress-bar-1 {
     padding: 0.5em;
     max-width: 100%;
     z-index: 10;
-    position: relative;
     transition: all 0.25s ease-out;
   }
+
   .is-current .ProgressBar-icon {
     fill: #00637c;
     background-color: #00637c;
@@ -111,11 +105,11 @@ ul.progress-bar-1 {
     display: block;
     text-transform: uppercase;
     color: #9f9fa3;
-    position: absolute;
     padding-top: 0.5em;
     width: 100%;
     transition: all 0.25s ease-out;
   }
+
   .is-current > .ProgressBar-stepLabel, .is-complete > .ProgressBar-stepLabel {
     color: #00637c;
   }
@@ -125,3 +119,5 @@ ul.progress-bar-1 {
     margin: 4em auto;
     font-size: 16px;
   }
+
+  

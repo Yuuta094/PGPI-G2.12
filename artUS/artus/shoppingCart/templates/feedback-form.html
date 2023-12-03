@@ -1,0 +1,65 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+{% load static %}
+<html>
+<head>
+    <title>Feedback Form</title>
+</head>
+<style>
+    label{
+        color:black;
+    }
+</style>
+<body>
+
+<hr class="mt-0">
+<div class="card shadow m-5">
+    <div class="card-body">
+        <div class="container-fluid">
+            <h5 class="p-2" style="border-bottom: 2px solid black; color: black;">Formulario de reclamaciones</h5>
+            <form method="post" name="feedback">
+                {% csrf_token %}
+                <div class="form-row" style="margin-bottom: 20px;">
+                    <div class="col-sm-6">
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label>Pedido</label>
+                            <input type="text" value="{{feedback.order.id}}" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label for="fname">Nombre</label>
+                            <input type="text" name="fname" id="fname" placeholder="Introduce tu nombre" value="{{customer.user.first_name}}" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label>Apellidos</label>
+                            <input type="text" name="lname" value="{{customer.user.last_name}}" placeholder="Introduce tus apellidos" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label>Email</label>
+                            <input type="text" name="email" placeholder="Introduce tu correo" value="{{customer.user.email}}" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label>Reclamación</label>
+                            <textarea name="feedback" class="form-control" placeholder="Escribe tu reclamación"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <input type="submit" value="Enviar" class="px-3 py-1.5 text-lg font-semibold bg-teal-500 text-white rounded-xl hover:bg-teal-700">
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+
+{% endblock %}

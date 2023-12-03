@@ -2,7 +2,7 @@ from django.shortcuts import render, HttpResponse, redirect
 from core.models import Customer
 
 from .forms import PurchaseForm, PurchaseNotLoggedForm
-from .models import ShoppingCart, CartItem, Order, Order_Detail, orderStatus
+from .models import ShoppingCart, CartItem, Order, Order_Detail, orderStatus, Feedback, STATUS
 from product.models import Artwork
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
@@ -155,14 +155,12 @@ def paymentComplete(request):
     print(sess)
     print(body)
     print(productos_carro)
-    
     # Datos cabecera
     oc = Order()
     oc.customer = body['customer']  # El cliente
     oc.ordernum = random.randint(10000, 99999)
     oc.save()
     print(oc.customer)
-    
     # Datos detalles
     for item in productos_carro:
         od = Order_Detail()
@@ -172,7 +170,6 @@ def paymentComplete(request):
         od.order = oc
         od.save()
         print(prod)
-    
     # Borrar sesión para empezar de cero
     # del request.session['data']  # Puede que haya que borrarlo 
     return redirect('/')
@@ -188,3 +185,32 @@ def userOrderTrack(request, order_id):
     order = Order.objects.get(id=order_id)
     orderstatus = orderStatus
     return render(request, "userOrderTrack.html", locals())
+
+def unauthenticatedOrderTrack(request):
+    return render(request, "unauthenticatedOrderTrack.html", locals())
+
+def user_feedback(request, order_id):
+    user = Customer.objects.get(user=request.user)
+    order = Order.objects.get(id=order_id)
+    if request.method == "POST":
+        Feedback.objects.create(user=request.user, order=order, message=request.POST['feedback'])
+        messages.success(request, "La reclamación se ha enviado con éxito")
+        
+    return render(request, "feedback-form.html", locals())
+
+def manage_feedback(request):
+    action = request.GET.get('action', 0)
+    feedback = Feedback.objects.filter(status=int(action))
+    return render(request, 'manage_feedback.html', locals())
+
+def delete_feedback(request, pid):
+    feedback = Feedback.objects.get(id=pid)
+    feedback.delete()
+    messages.success(request, "Deleted successfully")
+    return redirect('manage_feedback')
+
+def read_feedback(request, pid):
+    feedback = Feedback.objects.get(id=pid)
+    feedback.status = 1
+    feedback.save()
+    return HttpResponse(json.dumps({'id':1, 'status':'success'}), content_type="application/json")

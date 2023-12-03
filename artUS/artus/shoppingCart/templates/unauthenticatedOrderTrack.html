@@ -1,0 +1,19 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+{% load static %}
+<html>
+<head>
+    <title>Seguimiento de pedido</title>
+</head>
+
+<body>
+    <div class="form-group">
+        <label for="order_id">Número de pedido:</label>
+        <input type="number" name="order_id" id="order_id" class="form-control" min="0" placeholder="Escribe la id de tu pedido" value="{{order.id}}" required>
+        <a href="/user-order-track/{{order_id}}/" class="px-3 py-1.5 text-lg font-semibold bg-teal-500 text-white rounded-xl hover:bg-teal-700">Seguimiento de pedido</a>
+    </div>
+
+</body>
+
+{% endblock %}

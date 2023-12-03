@@ -36,9 +36,8 @@
               <button type="submit" class="py-2 px-4 text-lg bg-teal-500 hover:bg-teal-700 rounded-r-lg text-white">Añadir al carrito</button>
             </div>
           </form>
-        {% elif quantity > artwork.quantity %}
+        {% else %}
           <p class="text-red-500 mt-2">Lo sentimos mucho, este producto está temporalmente agotado.</p>
-        {% else  %}
         {% endif %}
 
       </div>
