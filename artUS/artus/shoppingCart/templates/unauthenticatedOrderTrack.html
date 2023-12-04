@@ -19,7 +19,8 @@
     {% if order %}
         <h2>Detalles del pedido:</h2>
         <p>ID del pedido: {{ order.id }}</p>
-        <!-- Añade aquí más campos del pedido que quieras mostrar -->
+        <p class="card-title">Seguimiento del pedido: {{ order.ordernum }} </p>
+        <p>Estado actual: {{ order.status }}</p>
     {% else %}
         <p>No se encontró ningún pedido con la ID proporcionada.</p>
     {% endif %}
