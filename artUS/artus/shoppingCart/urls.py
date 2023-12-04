@@ -16,5 +16,8 @@ urlpatterns = [
     path('my-order/', views.myOrder, name="my-order"),
     path('user-feedback/<int:order_id>/', views.user_feedback, name="user-feedback"),
     path('select-order/', views.unauthenticatedOrderTrack, name="select-order"),
+    path('manage-feedback/', views.manage_feedback, name="manage-feedback"),
+    path('change-order-status/<int:pid>/', views.change_order_status, name="change_order_status"),
+    path('all-orders', views.adminOrders, name="admin-orders"),
 
 ]

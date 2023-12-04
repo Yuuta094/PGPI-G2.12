@@ -1,0 +1,57 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+<!DOCTYPE html>
+{% load static %}
+    <html lang="es">
+    <head>
+        <title>Todos los pedidos</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    </head>
+    <body>
+    <hr class="mt-0">
+    <div class="card shadow m-5" id="myorder">
+        <div class="card-body">
+            <div class="container-fluid">
+                <table class="table table-bordered" style="width:100%">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Cliente</th>
+                        <th>Precio</th>
+                        <th>Estado</th>
+                        <th>Fecha de compra</th>
+                        <th>Detalles</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for i in orders %}
+                    <tr style="border-bottom: 1px solid #000;">
+                        <td>{{forloop.counter}}</td>
+                        <td>{{i.customer}}</td>
+                        <td>{{i.total_price}}</td>
+                        <td><a href="" class="btn btn-primary" title="Ver estado del pedido">{{i.get_status_display}}</a></td>
+                        <td>{{i.created}}</td>
+                        <td>
+                            {% for detail in orderdetails%}
+                                {% if detail.order.id == i.id %}
+                                    <li class="border p-4 rounded-md flex items-start">
+                                        <img src="{{ detail.product.image.url }}" alt="{{ detail.product.name }}" class="w-16 h-16 object-cover mr-4">
+                                        <p class="text-grey-darker">{{detail.product.name}} x {{detail.cant}}</p>
+                                        <br>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    </body>
+    </html>
+
+{% endblock %}

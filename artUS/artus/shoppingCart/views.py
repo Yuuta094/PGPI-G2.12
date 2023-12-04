@@ -98,6 +98,9 @@ def carrito_detail(request):
     shopping_cart = request.session.get('shopping_cart', {})
     cart_items = [CartItem(artwork_id=artwork_id, **data) for artwork_id, data in shopping_cart.items()]
     total = float(calculate_total(cart_items))
+    if total == 0:
+        messages.error(request, 'No hay productos en el carrito.')
+        return redirect('core:index')
     if request.user.is_authenticated:
         if request.method == 'POST':
             form = PurchaseForm(request.POST)
@@ -114,6 +117,7 @@ def carrito_detail(request):
                 order_detail = [Order_Detail(product=item.artwork, cant=item.quantity, order=order) for item in cart_items]
                 order.save()
                 order_detail = Order_Detail.objects.bulk_create(order_detail)
+                request.session['shopping_cart'] = {}
                 if 'save_data' in request.POST:
                     customer, created = Customer.objects.get_or_create(user=request.user)
                     customer.telephone = form.cleaned_data['telephone']
@@ -142,7 +146,11 @@ def carrito_detail(request):
                 order.country = form.cleaned_data['country']
                 order.city = form.cleaned_data['city']
                 order.zip_code = form.cleaned_data['zip_code']
+                order_detail = [Order_Detail(product=item.artwork, cant=item.quantity, order=order) for item in cart_items]
                 order.save()
+                order_detail = Order_Detail.objects.bulk_create(order_detail)
+                request.session['shopping_cart'] = {}
+                return redirect(reverse('core:index'))
         else:
             form = PurchaseNotLoggedForm()
     return render(request, 'shoppincartdetail.html', {'cart_items': cart_items, 'total': total, 'form': form})
@@ -208,16 +216,32 @@ def user_feedback(request, order_id):
 def manage_feedback(request):
     action = request.GET.get('action', 0)
     feedback = Feedback.objects.filter(status=int(action))
-    return render(request, 'manage_feedback.html', locals())
+    return render(request, 'manage-feedback.html', locals())
 
 def delete_feedback(request, pid):
     feedback = Feedback.objects.get(id=pid)
     feedback.delete()
     messages.success(request, "Deleted successfully")
-    return redirect('manage_feedback')
+    return redirect('manage-feedback')
 
 def read_feedback(request, pid):
     feedback = Feedback.objects.get(id=pid)
     feedback.status = 1
     feedback.save()
     return HttpResponse(json.dumps({'id':1, 'status':'success'}), content_type="application/json")
+
+def change_order_status(request, pid):
+    order = Order.objects.get(id=pid)
+    status = request.GET.get('status')
+    if status:
+        order.status = status
+        order.save()
+        messages.success(request, "Order status changed.")
+    return redirect('my-order')
+
+def adminOrders(request):
+    if not request.user.is_staff:
+        return redirect('core:index')
+    orders = Order.objects.all()
+    orderdetails = Order_Detail.objects.all()
+    return render(request, "adminOrders.html", locals())
