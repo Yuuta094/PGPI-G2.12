@@ -8,7 +8,13 @@ class PurchaseForm(forms.ModelForm):
     class Meta:
         model = Customer
         fields = ['address', 'country', 'city', 'zip_code', 'telephone']
-
+        labels = {
+            'address': 'Dirección',
+            'country': 'País',
+            'city': 'Ciudad',
+            'zip_code': 'Código Postal',
+            'telephone': 'Teléfono',
+        }
         widgets = {
             'address': forms.Textarea(attrs={
             'class': WIDGETS_STILES
@@ -31,7 +37,14 @@ class PurchaseNotLoggedForm(forms.ModelForm):
     class Meta:
         model = Order
         fields = ['customer', 'address', 'country', 'city', 'zip_code', 'telephone']
-        
+        labels = {
+            'customer': 'Correo electrónico',
+            'address': 'Dirección',
+            'country': 'País',
+            'city': 'Ciudad',
+            'zip_code': 'Código Postal',
+            'telephone': 'Teléfono',
+        }
         widgets = {
             'customer': forms.EmailInput(attrs={
             'class': WIDGETS_STILES

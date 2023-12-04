@@ -4,12 +4,8 @@ from .forms import NewItemForm,EditItemForm
 from .models import Category, Artwork
 
 
-
-# Create your views here.
-
 @login_required
 def new(request):
-    request.session["paypal"]
     if request.method== "POST":
         form= NewItemForm(request.POST, request.FILES)
         
@@ -18,7 +14,7 @@ def new(request):
             item.created_by = request.user
             item.save()
             
-            return redirect('product:detail', pk=item.id)
+            return redirect('product:detail', artwork_id=item.id)
     else:
         form = NewItemForm()
     
@@ -29,6 +25,7 @@ def new(request):
 def detail(request,artwork_id):
     artwork = get_object_or_404(Artwork, pk=artwork_id)
     related_obras = Artwork.objects.filter(category=artwork.category).exclude(pk=artwork_id)
+    
     return render(request,'product/detail.html', {
         'artwork':artwork,
         'related_obras':related_obras

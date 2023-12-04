@@ -34,4 +34,5 @@ urlpatterns = [
     path('contact/', contact, name='contact'),
     path('termsofuse/', termsofuse, name='termsofuse'),
     path('admin/', admin.site.urls),
+    path('', include('shoppingCart.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
