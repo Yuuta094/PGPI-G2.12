@@ -6,13 +6,13 @@
 <div class="card shadow">
     <div class="card-body">
 
-        <h5 class="p-2" style="border-bottom: 2px solid orange;">Ver reclamación</h5>
+        <h5 class="p-2" style="border-bottom: 2px solid orange;">Reclamaciones de usuarios</h5>
         <div class="container-fluid">
 
-            <table class="table table-bordered table-sm" id="example">
+            <table class="table table-bordered" style="width:90%">
                 <thead>
                 <tr>
-                    <th>S.No.</th>
+                    <th>Id</th>
                     <th>Usuario</th>
                     <th>Ver comentario</th>
                     <th>Acciones</th>
@@ -21,37 +21,12 @@
                 <tbody>
                 {% for i in feedback %}
                 <tr id="row-{{forloop.counter}}">
-                    <td>{{forloop.counter}}</td>
-                    <td>{{i.user.first_name}} {{i.user.last_name}}</td>
-                    <td>
-                        <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal-{{forloop.counter}}">
-                            Ver Comentario
-                        </button>
-
-                        <!-- Modal -->
-                        <div class="modal fade" id="exampleModal-{{forloop.counter}}" onblur="changeStatus('{{i.id}}', '{{forloop.counter}}', '{{i.status}}')" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">{{i.user.first_name}} {{i.user.last_name}} Reclamación</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="changeStatus('{{i.id}}', '{{forloop.counter}}', '{{i.status}}')">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                                </div>
-                                <div class="modal-body">
-                                    {{i.message}}
-                                </div>
-                                <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="changeStatus('{{i.id}}', '{{forloop.counter}}', '{{i.status}}')">Cerrar</button>
-                                </div>
-                            </div>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <a href="/delete-feedback/{{i.id}}/" class="text-danger"
-                            onclick="return confirm('Are You Sure?')">Delete</a></td>
+                    <td style="text-align: center">{{i.id}}</td>
+                    <td style="text-align: center">{{i.customer}}</td>
+                    <td style="text-align: center">{{i.message}}</td>
+                    <td style="text-align: center">
+                        <a href="/delete-feedback/{{i.id}}/" class="px-3 py-0.4 text-lg font-semibold bg-red-500 text-white rounded-xl hover:bg-teal-700"
+                            onclick="return confirm('¿Estás seguro/a?')">Borrar</a></td>
                 </tr>
                 {% endfor %}
                 </tbody>
@@ -59,15 +34,5 @@
         </div>
     </div>
 </div>
-<script>
-    function changeStatus(pid, count, status_id){
-        url = '/feedback-read/'+pid+'/';
-        $.get(url, function(data, status){
-            if(status_id == '2'){
-                document.getElementById('row-'+count).style.display = 'none';
-            }
-        })
-    }
-</script>
 
 {% endblock %}

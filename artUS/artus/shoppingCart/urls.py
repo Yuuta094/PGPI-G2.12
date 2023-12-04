@@ -17,7 +17,8 @@ urlpatterns = [
     path('user-feedback/<int:order_id>/', views.user_feedback, name="user-feedback"),
     path('select-order/', views.unauthenticatedOrderTrack, name="select-order"),
     path('manage-feedback/', views.manage_feedback, name="manage-feedback"),
-    path('change-order-status/<int:pid>/', views.change_order_status, name="change_order_status"),
-    path('all-orders', views.adminOrders, name="admin-orders"),
-
+    path('all-orders/', views.adminOrders, name="all-orders"),
+    path('delete-feedback/<int:pid>/', views.delete_feedback, name="delete_feedback"),
+    path('delete-order/<int:pid>/', views.delete_orders, name="delete_order"),
+    path('my-feedbacks/', views.my_feedbacks, name="my-feedbacks"),
 ]

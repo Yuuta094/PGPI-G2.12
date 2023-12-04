@@ -2,7 +2,7 @@ from django.shortcuts import render, HttpResponse, redirect
 from core.models import Customer
 from django.shortcuts import render, get_object_or_404
 from .forms import PurchaseForm, PurchaseNotLoggedForm
-from .models import ShoppingCart, CartItem, Order, Order_Detail, orderStatus, Feedback, STATUS
+from .models import ShoppingCart, CartItem, Order, Order_Detail, orderStatus, Feedback
 from product.models import Artwork
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
@@ -189,10 +189,16 @@ def myOrder(request):
     return render(request, "myOrder.html", locals())
 
 
+def my_feedbacks(request):
+    feedback = Feedback.objects.filter(customer=request.user)
+    return render(request, "my-feedbacks.html", locals())
+
+
 def userOrderTrack(request, order_id):
     order = Order.objects.get(id=order_id)
     orderstatus = orderStatus
     return render(request, "userOrderTrack.html", locals())
+
 
 def unauthenticatedOrderTrack(request):
     order_id = request.GET.get('order_id')
@@ -204,40 +210,27 @@ def unauthenticatedOrderTrack(request):
             order = None
     return render(request, "unauthenticatedOrderTrack.html", {'order': order})
 
+
 def user_feedback(request, order_id):
-    customer = request.user.customer
+    customer = request.user
     order = Order.objects.get(id=order_id)
     if request.method == "POST":
-        Feedback.objects.create(user=request.user, order=order, message=request.POST['feedback'])
-        messages.success(request, "La reclamación se ha enviado con éxito")
-        
+        Feedback.objects.create(customer=request.user, order=order, message=request.POST['feedback'])
     return render(request, "feedback-form.html", locals())
+
 
 def manage_feedback(request):
     action = request.GET.get('action', 0)
-    feedback = Feedback.objects.filter(status=int(action))
+    feedback = Feedback.objects.all()
+    customer = request.user.customer
     return render(request, 'manage-feedback.html', locals())
+
 
 def delete_feedback(request, pid):
     feedback = Feedback.objects.get(id=pid)
     feedback.delete()
-    messages.success(request, "Deleted successfully")
-    return redirect('manage-feedback')
+    return redirect('/manage-feedback/')
 
-def read_feedback(request, pid):
-    feedback = Feedback.objects.get(id=pid)
-    feedback.status = 1
-    feedback.save()
-    return HttpResponse(json.dumps({'id':1, 'status':'success'}), content_type="application/json")
-
-def change_order_status(request, pid):
-    order = Order.objects.get(id=pid)
-    status = request.GET.get('status')
-    if status:
-        order.status = status
-        order.save()
-        messages.success(request, "Order status changed.")
-    return redirect('my-order')
 
 def adminOrders(request):
     if not request.user.is_staff:
@@ -245,3 +238,9 @@ def adminOrders(request):
     orders = Order.objects.all()
     orderdetails = Order_Detail.objects.all()
     return render(request, "adminOrders.html", locals())
+
+
+def delete_orders(request, pid):
+    order = Order.objects.get(id=pid)
+    order.delete()
+    return redirect('/all-orders/')

@@ -17,10 +17,7 @@
     </form>
 
     {% if order %}
-        <h2>Detalles del pedido:</h2>
-        <p>ID del pedido: {{ order.id }}</p>
-        <p class="card-title">Seguimiento del pedido: {{ order.ordernum }} </p>
-        <p>Estado actual: {{ order.status }}</p>
+        <a href="{% url 'shoppingCart:user-order-track' order.id %}" class="px-6 py-3 text-lg font-semibold bg-gray-500 text-white rounded-xl hover:bg-gray-700">Ver Estado</a>
     {% else %}
         <p>No se encontró ningún pedido con la ID proporcionada.</p>
     {% endif %}

@@ -14,7 +14,7 @@ def new(request):
             item.created_by = request.user
             item.save()
             
-            return redirect('product:detail', pk=item.id)
+            return redirect('product:detail', artwork_id=item.id)
     else:
         form = NewItemForm()
     

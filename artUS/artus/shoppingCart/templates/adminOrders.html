@@ -17,24 +17,25 @@
                 <table class="table table-bordered" style="width:100%">
                     <thead>
                     <tr>
-                        <th>#</th>
+                        <th>Id</th>
                         <th>Cliente</th>
                         <th>Precio</th>
                         <th>Estado</th>
                         <th>Fecha de compra</th>
                         <th>Detalles</th>
+                        <th>Acciones</th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for i in orders %}
                     <tr style="border-bottom: 1px solid #000;">
-                        <td>{{forloop.counter}}</td>
-                        <td>{{i.customer}}</td>
-                        <td>{{i.total_price}}</td>
-                        <td><a href="" class="btn btn-primary" title="Ver estado del pedido">{{i.get_status_display}}</a></td>
-                        <td>{{i.created}}</td>
+                        <td style="text-align: center">{{i.id}}</td>
+                        <td style="text-align: center">{{i.customer}}</td>
+                        <td style="text-align: center">{{i.total_price}}</td>
+                        <td style="text-align: center"><a href="/user-order-track/{{i.id}}/" class="px-3 py-1.5 text-lg font-semibold bg-teal-500 text-white rounded-xl hover:bg-teal-700" title="Ver estado del pedido">{{i.get_status_display}}</a></td>
+                        <td style="text-align: center">{{i.created}}</td>
                         <td>
-                            {% for detail in orderdetails%}
+                            {% for detail in orderdetails %}
                                 {% if detail.order.id == i.id %}
                                     <li class="border p-4 rounded-md flex items-start">
                                         <img src="{{ detail.product.image.url }}" alt="{{ detail.product.name }}" class="w-16 h-16 object-cover mr-4">
@@ -43,6 +44,9 @@
                                     </li>
                                 {% endif %}
                             {% endfor %}
+                        </td>
+                        <td style="text-align: center">
+                            <a href="/delete-order/{{i.id}}/" class="px-3 py-1.5 text-lg font-semibold bg-red-500 text-white rounded-xl hover:bg-teal-700">Borrar</a>
                         </td>
                     </tr>
                     {% endfor %}

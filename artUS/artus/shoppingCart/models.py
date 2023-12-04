@@ -42,14 +42,11 @@ class Order_Detail(models.Model):
     def __str__(self):
         return self.order.customer + ' - ' + self.product.name + ' - ' + str(self.cant) + ' - ' + str(self.order.created)
     
-    
-STATUS = ((1, "Leído"), (2, "No Leído"))
 
 class Feedback(models.Model):
     customer = models.CharField(max_length=200, null=True, blank=True)
     order = models.ForeignKey(Order, on_delete= models.CASCADE)
     message = models.TextField(null=True, blank=True)
-    status = models.IntegerField(choices=STATUS, default=2)
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
