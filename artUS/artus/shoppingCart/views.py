@@ -190,7 +190,7 @@ def unauthenticatedOrderTrack(request):
     return render(request, "unauthenticatedOrderTrack.html", locals())
 
 def user_feedback(request, order_id):
-    user = Customer.objects.get(user=request.user)
+    customer = request.user.customer
     order = Order.objects.get(id=order_id)
     if request.method == "POST":
         Feedback.objects.create(user=request.user, order=order, message=request.POST['feedback'])
