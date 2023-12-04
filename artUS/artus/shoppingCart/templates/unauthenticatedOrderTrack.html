@@ -8,12 +8,21 @@
 </head>
 
 <body>
-    <div class="form-group">
-        <label for="order_id">Número de pedido:</label>
-        <input type="number" name="order_id" id="order_id" class="form-control" min="0" placeholder="Escribe la id de tu pedido" value="{{order.id}}" required>
-        <a href="/user-order-track/{{order_id}}/" class="px-3 py-1.5 text-lg font-semibold bg-teal-500 text-white rounded-xl hover:bg-teal-700">Seguimiento de pedido</a>
-    </div>
+    <form method="get" action="{% url 'shoppingCart:select-order' %}">
+        <div class="form-group">
+            <label for="order_id">Número de pedido:</label>
+            <input type="number" name="order_id" id="order_id" class="form-control" min="0" placeholder="Escribe la id de tu pedido" required>
+            <input type="submit" value="Seguimiento de pedido" class="px-3 py-1.5 text-lg font-semibold bg-teal-500 text-white rounded-xl hover:bg-teal-700">
+        </div>
+    </form>
 
+    {% if order %}
+        <h2>Detalles del pedido:</h2>
+        <p>ID del pedido: {{ order.id }}</p>
+        <!-- Añade aquí más campos del pedido que quieras mostrar -->
+    {% else %}
+        <p>No se encontró ningún pedido con la ID proporcionada.</p>
+    {% endif %}
 </body>
-
+</html>
 {% endblock %}

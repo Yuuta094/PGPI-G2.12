@@ -1,6 +1,6 @@
 from django.shortcuts import render, HttpResponse, redirect
 from core.models import Customer
-
+from django.shortcuts import render, get_object_or_404
 from .forms import PurchaseForm, PurchaseNotLoggedForm
 from .models import ShoppingCart, CartItem, Order, Order_Detail, orderStatus, Feedback, STATUS
 from product.models import Artwork
@@ -187,7 +187,14 @@ def userOrderTrack(request, order_id):
     return render(request, "userOrderTrack.html", locals())
 
 def unauthenticatedOrderTrack(request):
-    return render(request, "unauthenticatedOrderTrack.html", locals())
+    order_id = request.GET.get('order_id')
+    order = None
+    if order_id is not None:
+        try:
+            order = Order.objects.get(id=order_id)
+        except Order.DoesNotExist:
+            order = None
+    return render(request, "unauthenticatedOrderTrack.html", {'order': order})
 
 def user_feedback(request, order_id):
     customer = request.user.customer
