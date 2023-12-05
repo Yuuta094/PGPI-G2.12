@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login, logout, update_session_auth
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib import messages
 from django.urls import reverse
+from django.core.exceptions import ObjectDoesNotExist
 import random, json
 from .models import *
 from .forms import *
@@ -73,7 +74,7 @@ def detail(request,artwork_id):
 
 @login_required
 def edit(request, artwork_id):
-    obra= get_object_or_404(Artwork, artwork_id=artwork_id)
+    obra= get_object_or_404(Artwork, id=artwork_id)
     if request.method == "POST":
         form= EditItemForm(request.POST, request.FILES, instance=obra)
         if form.is_valid():
@@ -81,7 +82,7 @@ def edit(request, artwork_id):
             return redirect('proyect:detail', artwork_id=obra.id)
     else:
         form = EditItemForm(instance=obra)
-    return render(request, 'proyect/NewAndEdit.html',{
+    return render(request, 'product/NewAndEdit.html',{
         'form': form, 
         'title': 'Edit Item'})
     
@@ -229,6 +230,12 @@ def carrito_detail(request):
     shopping_cart = request.session.get('shopping_cart', {})
     cart_items = [CartItem(artwork_id=artwork_id, **data) for artwork_id, data in shopping_cart.items()]
     total = float(calculate_total(cart_items))
+    shipping_cost = 0
+    if total == 0:
+        messages.error(request, 'No hay productos en el carrito.')
+        return redirect('proyect:index')
+    if total < 50:
+        shipping_cost = 5
     if request.user.is_authenticated:
         if request.method == 'POST':
             form = PurchaseForm(request.POST)
@@ -236,7 +243,7 @@ def carrito_detail(request):
                 order = Order()
                 order.ordernum = random.randint(10000, 99999)
                 order.customer = request.user.email #the future order model should link the customer if possible, not just a string
-                order.total_price = total
+                order.total_price = total + shipping_cost
                 order.telephone = form.cleaned_data['telephone']
                 order.address = form.cleaned_data['address']
                 order.country = form.cleaned_data['country']
@@ -269,6 +276,7 @@ def carrito_detail(request):
                 order = Order()
                 order.ordernum = random.randint(10000, 99999)
                 order.customer = form.cleaned_data['customer'] #email
+                order.total_price = total + shipping_cost
                 order.telephone = form.cleaned_data['telephone']
                 order.address = form.cleaned_data['address']
                 order.country = form.cleaned_data['country']
@@ -281,7 +289,7 @@ def carrito_detail(request):
                 return redirect(reverse('proyect:index'))
         else:
             form = PurchaseNotLoggedForm()
-    return render(request, 'shoppingCart/shoppincartdetail.html', {'cart_items': cart_items, 'total': total, 'form': form})
+    return render(request, 'shoppingCart/shoppincartdetail.html', {'cart_items': cart_items, 'total': total, 'form': form, 'shipping_cost': shipping_cost})
 
 
 #               #
@@ -397,15 +405,11 @@ def paymentComplete(request):
     body = json.loads(request.body)
     sess = request.session.get("data", {"items": []})
     productos_carro = sess["items"]
-    print(sess)
-    print(body)
-    print(productos_carro)
     # Datos cabecera
     oc = Order()
     oc.customer = body['customer']  # El cliente
     oc.ordernum = random.randint(10000, 99999)
     oc.save()
-    print(oc.customer)
     # Datos detalles
     for item in productos_carro:
         od = Order_Detail()
@@ -414,7 +418,8 @@ def paymentComplete(request):
         od.cant = 1
         od.order = oc
         od.save()
-        print(prod)
+    request.session['shopping_cart'] = {}
+
     # Borrar sesión para empezar de cero
     # del request.session['data']  # Puede que haya que borrarlo 
     return redirect('/')
@@ -481,7 +486,11 @@ def user_feedback(request, order_id):
 def manage_feedback(request):
     action = request.GET.get('action', 0)
     feedback = Feedback.objects.all()
-    customer = request.user.customer
+    customer = None
+    try:
+        customer = Customer.objects.get(user=request.user)
+    except ObjectDoesNotExist:
+        pass
     return render(request, 'feedBack/manage-feedback.html', locals())
 
 

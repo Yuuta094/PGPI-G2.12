@@ -35,7 +35,7 @@
             </div>
               {% if request.user.is_staff %}
               <div class="mt-6 p-6 bg-white roundd-xl shadow-md">
-                    <a href="{% url 'proyect:edit' artwork.id %}" class="button1">Editar</a>
+                    <a href="{% url 'proyect:edit_item' artwork.id %}" class="button1">Editar</a>
                     <a href="{% url 'proyect:delete_item' artwork.id %}" class="button2">Borrar</a>
                 </div>
             </form>

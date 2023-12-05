@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-
+{% load static %}
 <html>
     <head>
         <meta charset="utf-8">
@@ -15,8 +15,7 @@
         <div class='cabezera flex items-center'> 
             <a href="/" class="text-4xl">
             <div class='text-white py-2 flex items-center space-x-6'>
-                <img src="proyect/product_images/artus_logo.png" alt="Logo" class="logo rounded-xl" width="45" height="45">
-                ArtUS</a>
+                <img src="{% static 'artus_logo.png' %}" alt="Logo" class="logo rounded-xl" width="45" height="45">                ArtUS</a>
             </div>
         
             <div class='ml-auto flex items-center space-x-6'>
@@ -45,7 +44,7 @@
     <!-- Datos del index-->
         {% if request.user.is_staff %}
             <div style = "font-family:courier New;", class='text-center py-2'>
-                <p class = "text-4xl">Panel Administrador</p>
+                <p class = "text-4xl">Panel de Administrador</p>
             </div>        
             <nav class="py-2 px-6 flex justify-center border-b border-black ">
                 <div>
