@@ -1,0 +1,118 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Mostrar usuarios{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mostrar usuarios</title>
+</head>
+<body>
+    <table style="width:100%; table-layout: fixed; border-collapse:collapse; text-align:center;">
+        <thead bgcolor="#88b1f7" height="40px">
+            <tr>
+                <th style="width:10%;">Id</th>
+                <th style="width:20%;">Nombre</th>
+                <th style="width:20%;">Email</th>
+                <th style="width:20%;">Contraseña</th>
+                <th style="width:30%;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr bgcolor="#ffffff">
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.password }}</td>
+                <td>
+                    <button1><a style="color: w; text-color: black;" href="/edit/{{ user.id }}">Editar</a></button1>
+                    <button2><a style="color: white;" href="/delete/{{ user.id }}">Eliminar</a></button2>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <br>
+    <br>
+    <button class="letra"><a style="color: white;" href="/create/">Añadir usuario</a></button>
+    
+</body>    
+</html>
+
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    th, td {
+        border: 1px solid #ccc;
+        padding: 12px;
+        text-align: center;
+        word-wrap: break-word;
+    }
+
+    th {
+        background-color: #1a202c;
+        color: white;
+        word-wrap: break-word;
+    }
+
+    tr:hover {
+        background-color: #f8fafc;
+    }
+
+    button {
+        border-radius: 20px;
+        padding: 6px 15px;
+        background-color:#1c1c1c;
+        color: #FFFFFF;
+        text-color: #FFFFFF;
+        text-2xl;
+    }
+
+    button:hover {
+        border-radius: 20px;
+        background-color: #E49B0F;
+        color: #FFFFFF;
+    }
+
+    button1{        
+        border-radius: 20px;
+        padding: 6px 15px;
+        background-color:#1c1c1c;
+        color: #FFFFFF;
+        text-color: #FFFFFF;
+        text-2xl;
+    }
+    button1:hover {
+        background-color: #228c33;
+    }
+    button2{
+        border-radius: 20px;
+        padding: 6px 15px;
+        background-color:#1c1c1c;
+        color: #FFFFFF;
+        text-color: #FFFFFF;
+        text-2xl;   
+    }
+    button2:hover {
+        background-color: #c72d2b;
+    }
+</style>
+{% endblock %}
+
+
+
+

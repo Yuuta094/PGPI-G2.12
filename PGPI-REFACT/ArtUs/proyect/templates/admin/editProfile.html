@@ -1,0 +1,62 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Editar contraseña{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar contraseña</title>
+    {% load static %}
+</head>
+<body>
+    <div class="shadow-md bg-gray-100 p-8 border-2 rounded-lg w-96 mx-auto my-6">
+        <h1 class="mb-6 text-2xl font-semibold text-center">Editar contraseña</h1>
+        <form id="passwordForm" method="post" action=".">
+            {% csrf_token %}
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-600">Contraseña antigua</label>
+                <div class="border-2 border-black rounded-xl p-2">
+                    {{ form.old_password }}
+                </div>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-600">Nueva contraseña</label>
+                <div class="border-2 border-black rounded-xl p-2">
+                    {{ form.new_password1 }}
+                </div>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-600">Confirmar nueva contraseña</label>
+                <div class="border-2 border-black rounded-xl p-2">
+                    {{ form.new_password2 }}
+                </div>
+            </div>
+
+            {% if form.errors or form.non_field_errors %}
+                <div class="mb-4 p-3 bg-red-100 rounded-md">
+                    <div class="border-2 border-black rounded-xl">
+                        {% for field in form %}
+                            {{ field.errors }}
+                        {% endfor %}
+                        {{ form.non_field_errors }}
+                    </div>
+                </div>
+            {% endif %}
+            <button class="boton-cabezera w-full" type="submit">Guardar cambios</button>
+        </form>
+
+        <script>
+            // Agrega un evento submit al formulario
+            document.getElementById("passwordForm").addEventListener("submit", function() {
+                // Muestra la alerta cuando el formulario se envía correctamente
+                alert('Tu contraseña se ha cambiado con éxito');
+            });
+        </script>
+    </div>
+</body>
+</html>
+{% endblock %}

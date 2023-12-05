@@ -88,3 +88,15 @@ def destroy_user(request, user_id):
     user = get_object_or_404(User, pk=user_id)
     user.delete()
     return redirect("/show/")
+
+@login_required
+def edit_profile(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  
+            return redirect('/edit_profile/')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'core/editProfile.html', {'form': form})

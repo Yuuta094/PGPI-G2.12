@@ -1,0 +1,24 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Cerrar sesión{% endblock %}
+{% block content %}
+
+{% if request.user.is_authenticated %}
+    <div class="w-1/2 my-6 mx-auto p-6 bg-gray-100 rounded-xl shadow-md "> 
+        <form method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <p class="p-4 text-xl text-gray-800">¿Estás seguro de que quieres cerrar sesión?</p>
+                <button class="boton-cabezera w-full">Cerrar sesión</button>
+            </div>
+        </form>
+    </div>
+{% else %}
+    <div class="text-center my-8">
+        <p class="text-xl text-gray-800">
+            No has iniciado sesión, ¿quieres <a href="/login/" class="text-teal-500">iniciar sesión</a>?
+        </p>
+    </div>
+{% endif %}
+
+{% endblock %}

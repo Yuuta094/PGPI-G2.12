@@ -1,0 +1,29 @@
+{% extends "core/base.html" %}
+
+{% block title %} {{title}} {% endblock %}
+
+{% block content %}
+<div class='flex items-center justify-center'>
+    <h1 class="letra text-3xl"> {{title}} </h1>
+</div>
+
+<div class='flex items-center justify-center h-screen"'>
+    <div class='shadow-md justify-center items-center'>
+        <form method="post" action="." enctype="multipart/form-data" class="w-96 p-8 bg-gray-100 rounded-lg shadow-md border-2"> 
+            {% csrf_token %}
+            <div class="letra">
+                {{ form.as_p }}
+            </div>
+            {% if form.errors or form.non_field_errors %}
+                <div class="mb-3 p-6 bg-red-100 rounded-xl">
+                    {% for field in form %}
+                        {{ field.errors }}
+                    {% endfor %}
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+            <button class="mt-6 py-4 px-8 text-lg bg-teal-500 rounded-xl boton-cabezera">Publicar</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
