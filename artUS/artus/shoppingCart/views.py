@@ -7,7 +7,10 @@ from product.models import Artwork
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 import json, random
-
+from django.conf import settings
+from django.views import View
+from django.template.loader import get_template
+from django.core.mail import EmailMessage,send_mail
 from decimal import Decimal
 from django.contrib import messages
 
@@ -94,6 +97,40 @@ def calculate_total(cart_items):
     return sum(item.accum_value for item in cart_items)    
 
 
+def enviar_correo(order, order_details):
+    ASUNTO = 'ArtUS - Resumen de la compra {}'.format(order.created.strftime('%d/%m/%Y %H:%M'))
+    template = get_template('email-order-success.html')
+    content = template.render({'email': order.customer.email, 'address':order.address, 'order': order, 'order_details': order_details, 
+                               'products': order_details, 'price':order.total_price })  
+    REMITENTE = settings.EMAIL_HOST_USER
+    DESTINATARIO = [order.customer.email]
+    send_mail(
+        ASUNTO,
+        message="",
+        from_email=REMITENTE,
+        recipient_list=DESTINATARIO,
+        html_message=content,
+        fail_silently = False
+    )
+
+
+def enviar_correo_no_registrado(order, order_details):
+    ASUNTO = 'ArtUS - Resumen de la compra {}'.format(order.created.strftime('%d/%m/%Y %H:%M'))
+    template = get_template('email-order-success.html')
+    content = template.render({'email': order.customer, 'address':order.address, 'order': order, 'order_details': order_details, 
+                               'products': order_details, 'price':order.total_price })  
+    REMITENTE = settings.EMAIL_HOST_USER
+    DESTINATARIO = [order.customer]
+    send_mail(
+        ASUNTO,
+        message="",
+        from_email=REMITENTE,
+        recipient_list=DESTINATARIO,
+        html_message=content,
+        fail_silently = False
+    )
+
+
 def carrito_detail(request):
     shopping_cart = request.session.get('shopping_cart', {})
     cart_items = [CartItem(artwork_id=artwork_id, **data) for artwork_id, data in shopping_cart.items()]
@@ -114,6 +151,7 @@ def carrito_detail(request):
                 order.country = form.cleaned_data['country']
                 order.city = form.cleaned_data['city']
                 order.zip_code = form.cleaned_data['zip_code']
+                order.total_price = total
                 order_detail = [Order_Detail(product=item.artwork, cant=item.quantity, order=order) for item in cart_items]
                 order.save()
                 order_detail = Order_Detail.objects.bulk_create(order_detail)
@@ -127,6 +165,8 @@ def carrito_detail(request):
                     customer.zip_code = form.cleaned_data['zip_code']
                     customer.save()
                 # Procesar el pago contrareembolso
+                order.customer = request.user
+                enviar_correo(order, order_detail)
                 return redirect(reverse('shoppingCart:my-order'))
         else:
             if hasattr(request.user, 'customer'):
@@ -150,11 +190,12 @@ def carrito_detail(request):
                 order.save()
                 order_detail = Order_Detail.objects.bulk_create(order_detail)
                 request.session['shopping_cart'] = {}
+                enviar_correo_no_registrado(order, order_detail)
                 return redirect(reverse('core:index'))
         else:
             form = PurchaseNotLoggedForm()
     return render(request, 'shoppincartdetail.html', {'cart_items': cart_items, 'total': total, 'form': form})
-
+    
 
 def paymentComplete(request):
     body = json.loads(request.body)
@@ -170,6 +211,7 @@ def paymentComplete(request):
     oc.save()
     print(oc.customer)
     # Datos detalles
+    order_details = []
     for item in productos_carro:
         od = Order_Detail()
         prod = Artwork.objects.get(name=item)  # Nombre del producto/s
@@ -178,8 +220,8 @@ def paymentComplete(request):
         od.order = oc
         od.save()
         print(prod)
-    # Borrar sesión para empezar de cero
-    # del request.session['data']  # Puede que haya que borrarlo 
+        order_details.append(od)
+    enviar_correo(oc, order_details)
     return redirect('/')
 
 

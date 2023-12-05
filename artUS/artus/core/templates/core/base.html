@@ -64,7 +64,7 @@
                 <div class="space-x-4">
                     {% if request.user.is_staff %}
                         <div class="dropdown-menu">
-                            <a class="px-2 py-0.3 text-lg font-semibold bg-teal-500 text-white rounded-xl hover:bg-teal-700" href="/manage-feedback/?action=1">Ver Reclamaciones</a>
+                            <a class="px-2 py-0.3 text-lg font-semibold bg-teal-500 text-white rounded-xl hover:bg-teal-700" href="{% url 'carrito:manage-feedback' %}">Ver Reclamaciones</a>
                         </div>
                     {% endif %}
                 </div>
