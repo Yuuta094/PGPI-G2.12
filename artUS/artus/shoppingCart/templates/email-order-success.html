@@ -132,24 +132,25 @@
                     </table>
                     <table class="order-detail" border="0" cellpadding="0" cellspacing="0" align="left">
                         <tr align="left">
-                            <th>Dirección de entrega</th>
-                            <th>Precio Total</th>
-                            <th>Productos comprados</th>
+                            <th style="text-align: center">Dirección de entrega</th>
+                            <th style="text-align: center">Precio Total</th>
+                            <th style="text-align: center">Productos comprados</th>
                         </tr>
                         <tr>
-                            <td>
+                            <td style="text-align: center">
                                 {{ address }}<br/>
                             </td>
-                            <td>
+                            <td style="text-align: center">
                                 {{ price }}<br/>
                             </td>
                             {% for p in products %}
-                            <td>
-                                    <p>Imagen: {{ p.product.image }}</p></br>
+                                <td style="text-align: center">
+                                    <img src="/artUS/artus/{{ p.product.image.url }}"></img>
+                                    <p>Imagen: {{ p.product.image.url }}</p></br>
                                     <p>Nombre: {{ p.product.name }}</p></br>
                                     <p>Cantidad: {{ p.cant }}</p></br>
                                     <p>Precio: {{ p.product.price }}</p></br>
-                            </td>
+                                </td>
                             {% endfor %}
                         </tr>
                     </table>

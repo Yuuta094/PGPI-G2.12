@@ -10,7 +10,7 @@ import json, random
 from django.conf import settings
 from django.views import View
 from django.template.loader import get_template
-from django.core.mail import EmailMultiAlternatives
+from django.core.mail import EmailMessage,send_mail
 from decimal import Decimal
 from django.contrib import messages
 
@@ -97,6 +97,40 @@ def calculate_total(cart_items):
     return sum(item.accum_value for item in cart_items)    
 
 
+def enviar_correo(order, order_details):
+    ASUNTO = 'ArtUS - Resumen de la compra {}'.format(order.created.strftime('%d/%m/%Y %H:%M'))
+    template = get_template('email-order-success.html')
+    content = template.render({'email': order.customer.email, 'address':order.address, 'order': order, 'order_details': order_details, 
+                               'products': order_details, 'price':order.total_price })  
+    REMITENTE = settings.EMAIL_HOST_USER
+    DESTINATARIO = [order.customer.email]
+    send_mail(
+        ASUNTO,
+        message="",
+        from_email=REMITENTE,
+        recipient_list=DESTINATARIO,
+        html_message=content,
+        fail_silently = False
+    )
+
+
+def enviar_correo_no_registrado(order, order_details):
+    ASUNTO = 'ArtUS - Resumen de la compra {}'.format(order.created.strftime('%d/%m/%Y %H:%M'))
+    template = get_template('email-order-success.html')
+    content = template.render({'email': order.customer, 'address':order.address, 'order': order, 'order_details': order_details, 
+                               'products': order_details, 'price':order.total_price })  
+    REMITENTE = settings.EMAIL_HOST_USER
+    DESTINATARIO = [order.customer]
+    send_mail(
+        ASUNTO,
+        message="",
+        from_email=REMITENTE,
+        recipient_list=DESTINATARIO,
+        html_message=content,
+        fail_silently = False
+    )
+
+
 def carrito_detail(request):
     shopping_cart = request.session.get('shopping_cart', {})
     cart_items = [CartItem(artwork_id=artwork_id, **data) for artwork_id, data in shopping_cart.items()]
@@ -131,6 +165,8 @@ def carrito_detail(request):
                     customer.zip_code = form.cleaned_data['zip_code']
                     customer.save()
                 # Procesar el pago contrareembolso
+                order.customer = request.user
+                enviar_correo(order, order_detail)
                 return redirect(reverse('shoppingCart:my-order'))
         else:
             if hasattr(request.user, 'customer'):
@@ -154,11 +190,12 @@ def carrito_detail(request):
                 order.save()
                 order_detail = Order_Detail.objects.bulk_create(order_detail)
                 request.session['shopping_cart'] = {}
+                enviar_correo_no_registrado(order, order_detail)
                 return redirect(reverse('core:index'))
         else:
             form = PurchaseNotLoggedForm()
     return render(request, 'shoppincartdetail.html', {'cart_items': cart_items, 'total': total, 'form': form})
-
+    
 
 def paymentComplete(request):
     body = json.loads(request.body)
@@ -174,6 +211,7 @@ def paymentComplete(request):
     oc.save()
     print(oc.customer)
     # Datos detalles
+    order_details = []
     for item in productos_carro:
         od = Order_Detail()
         prod = Artwork.objects.get(name=item)  # Nombre del producto/s
@@ -182,20 +220,8 @@ def paymentComplete(request):
         od.order = oc
         od.save()
         print(prod)
-    # Enviar correo electrónico al cliente
-    template = get_template('email-order-success.html')
-
-    content = template.render({'email': oc.customer.user.email, 'address':oc.address, 'order': oc, 'order_details': od, 
-                               'products': od, 'price':oc.total_price, 'amount': od.cant })  
-    msg = EmailMultiAlternatives(
-        'Verificación de correo electrónico',
-        settings.EMAIL_HOST_USER,
-        [oc.customer.user.email]
-    )
-    
-    msg.attach_alternative(content, 'text/html')
-    msg.send()
-
+        order_details.append(od)
+    enviar_correo(oc, order_details)
     return redirect('/')
 
 
@@ -260,28 +286,3 @@ def delete_orders(request, pid):
     order = Order.objects.get(id=pid)
     order.delete()
     return redirect('/all-orders/')
-
-class Send(View):
-    def get(self, request):
-        customer = request.user
-        
-        return render(request, 'mail/send.html', locals())
-    
-    def post(self, request):
-        email = request.POST.get('email')
-        print(email)
-        template = get_template('email-order-success.html')
-
-        # Se renderiza el template y se envias parametros
-        content = template.render({'email': email})
-
-        # Se crea el correo (titulo, mensaje, emisor, destinatario)
-        msg = EmailMultiAlternatives(
-            'Verificación de correo electrónico',
-            settings.EMAIL_HOST_USER,
-            [email]
-        )
-        
-        msg.attach_alternative(content, 'text/html')
-        msg.send()
-        return render(request, 'mail/send.html')
