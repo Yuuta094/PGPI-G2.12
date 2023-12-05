@@ -7,7 +7,10 @@ from product.models import Artwork
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 import json, random
-
+from django.conf import settings
+from django.views import View
+from django.template.loader import get_template
+from django.core.mail import EmailMultiAlternatives
 from decimal import Decimal
 from django.contrib import messages
 
@@ -114,6 +117,7 @@ def carrito_detail(request):
                 order.country = form.cleaned_data['country']
                 order.city = form.cleaned_data['city']
                 order.zip_code = form.cleaned_data['zip_code']
+                order.total_price = total
                 order_detail = [Order_Detail(product=item.artwork, cant=item.quantity, order=order) for item in cart_items]
                 order.save()
                 order_detail = Order_Detail.objects.bulk_create(order_detail)
@@ -178,8 +182,20 @@ def paymentComplete(request):
         od.order = oc
         od.save()
         print(prod)
-    # Borrar sesión para empezar de cero
-    # del request.session['data']  # Puede que haya que borrarlo 
+    # Enviar correo electrónico al cliente
+    template = get_template('email-order-success.html')
+
+    content = template.render({'email': oc.customer.user.email, 'address':oc.address, 'order': oc, 'order_details': od, 
+                               'products': od, 'price':oc.total_price, 'amount': od.cant })  
+    msg = EmailMultiAlternatives(
+        'Verificación de correo electrónico',
+        settings.EMAIL_HOST_USER,
+        [oc.customer.user.email]
+    )
+    
+    msg.attach_alternative(content, 'text/html')
+    msg.send()
+
     return redirect('/')
 
 
@@ -244,3 +260,28 @@ def delete_orders(request, pid):
     order = Order.objects.get(id=pid)
     order.delete()
     return redirect('/all-orders/')
+
+class Send(View):
+    def get(self, request):
+        customer = request.user
+        
+        return render(request, 'mail/send.html', locals())
+    
+    def post(self, request):
+        email = request.POST.get('email')
+        print(email)
+        template = get_template('email-order-success.html')
+
+        # Se renderiza el template y se envias parametros
+        content = template.render({'email': email})
+
+        # Se crea el correo (titulo, mensaje, emisor, destinatario)
+        msg = EmailMultiAlternatives(
+            'Verificación de correo electrónico',
+            settings.EMAIL_HOST_USER,
+            [email]
+        )
+        
+        msg.attach_alternative(content, 'text/html')
+        msg.send()
+        return render(request, 'mail/send.html')
