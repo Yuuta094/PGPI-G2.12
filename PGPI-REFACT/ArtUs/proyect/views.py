@@ -4,6 +4,9 @@ from django.contrib.auth import authenticate, login, logout, update_session_auth
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib import messages
 from django.urls import reverse
+from django.core.mail import EmailMessage,send_mail
+from django.conf import settings
+from django.template.loader import get_template
 from django.core.exceptions import ObjectDoesNotExist
 import random, json
 from .models import *
@@ -138,6 +141,45 @@ def search(request):
     })
 
 
+
+
+#               #
+#---- Email ----#
+#               #
+
+def enviar_correo(order, order_details):
+    ASUNTO = 'ArtUS - Resumen de la compra {}'.format(order.created.strftime('%d/%m/%Y %H:%M'))
+    template = get_template('shoppingCart/email-order-success.html')
+    content = template.render({'email': order.customer.email, 'address':order.address, 'order': order, 'order_details': order_details, 
+                               'products': order_details, 'price':order.total_price })
+    REMITENTE = settings.EMAIL_HOST_USER
+    DESTINATARIO = [order.customer.email]
+    send_mail(
+        ASUNTO,
+        message="",
+        from_email=REMITENTE,
+        recipient_list=DESTINATARIO,
+        html_message=content,
+        fail_silently = False
+    )
+    
+    
+def enviar_correo_no_registrado(order, order_details):
+    ASUNTO = 'ArtUS - Resumen de la compra {}'.format(order.created.strftime('%d/%m/%Y %H:%M'))
+    template = get_template('shoppingCart/email-order-success.html')
+    content = template.render({'email': order.customer, 'address':order.address, 'order': order, 'order_details': order_details, 
+                               'products': order_details, 'price':order.total_price })
+    REMITENTE = settings.EMAIL_HOST_USER
+    DESTINATARIO = [order.customer]
+    send_mail(
+        ASUNTO,
+        message="",
+        from_email=REMITENTE,
+        recipient_list=DESTINATARIO,
+        html_message=content,
+        fail_silently = False
+    )
+
 #                 #
 #---- Carrito ----#
 #                 #
@@ -262,6 +304,8 @@ def carrito_detail(request):
                     customer.zip_code = form.cleaned_data['zip_code']
                     customer.save()
                 # Procesar el pago contrareembolso
+                order.customer = request.user
+                enviar_correo(order, order_detail)
                 return redirect(reverse('proyect:my-order'))
         else:
             if hasattr(request.user, 'customer'):
@@ -282,10 +326,12 @@ def carrito_detail(request):
                 order.country = form.cleaned_data['country']
                 order.city = form.cleaned_data['city']
                 order.zip_code = form.cleaned_data['zip_code']
+                order.total_price = total
                 order_detail = [Order_Detail(product=item.artwork, cant=item.quantity, order=order) for item in cart_items]
                 order.save()
                 order_detail = Order_Detail.objects.bulk_create(order_detail)
                 request.session['shopping_cart'] = {}
+                enviar_correo_no_registrado(order, order_detail)
                 return redirect(reverse('proyect:index'))
         else:
             form = PurchaseNotLoggedForm()
@@ -411,6 +457,7 @@ def paymentComplete(request):
     oc.ordernum = random.randint(10000, 99999)
     oc.save()
     # Datos detalles
+    order_details = []
     for item in productos_carro:
         od = Order_Detail()
         prod = Artwork.objects.get(name=item)  # Nombre del producto/s
@@ -418,10 +465,8 @@ def paymentComplete(request):
         od.cant = 1
         od.order = oc
         od.save()
-    request.session['shopping_cart'] = {}
-
-    # Borrar sesión para empezar de cero
-    # del request.session['data']  # Puede que haya que borrarlo 
+        order_details.append(od)
+    enviar_correo(oc, order_details) 
     return redirect('/')
 
 
