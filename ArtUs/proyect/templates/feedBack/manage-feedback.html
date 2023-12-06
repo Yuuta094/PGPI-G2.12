@@ -1,0 +1,38 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+{% load static %}
+
+<div class="card shadow">
+    <div class="card-body">
+
+        <h5 class="p-2" style="border-bottom: 2px solid orange;">Reclamaciones de usuarios</h5>
+        <div class="container-fluid">
+
+            <table class="table table-bordered" style="width:90%">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Usuario</th>
+                    <th>Ver comentario</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for i in feedback %}
+                <tr class='border-black'id="row-{{forloop.counter}}">
+                    <td style="text-align: center">{{i.id}}</td>
+                    <td style="text-align: center">{{i.customer}}</td>
+                    <td style="text-align: center">{{i.message}}</td>
+                    <td style="text-align: center">
+                        <a href="/delete-feedback/{{i.id}}/" class="px-3 py-0.4 text-lg font-semibold bg-red-500 text-white rounded-xl hover:bg-teal-700"
+                            onclick="return confirm('¿Estás seguro/a?')">Borrar</a></td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
