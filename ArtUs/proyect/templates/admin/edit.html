@@ -1,0 +1,56 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Editar usuarios{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar usuario</title>
+    {% load static %}
+</head>
+<body>
+    <div class='shadow-md bg-gray-100  padding-left:30 mr-auto ml-auto w-96 p-8 border-2 rounded-lg'>
+        <h3 class="text-2xl font-semibold mb-6 text-center">Actualizar datos</h3>
+        <form method="POST" action="/edit/{{user.id}}">
+            {% csrf_token %}
+
+            <div class="mb-4">
+                <label class="text-gray-600 w-full">Nombre</label>
+                <div class="rounded-xl w-full p-3 border-black border-2">
+                    {{ form.username }}
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-600">Email</label>
+                <div class="border-2 border-black rounded-xl">
+                    {{ form.email }}
+                </div>
+            </div>
+            
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-600">Contraseña</label>
+                <div class="border-2 border-black rounded-xl">
+                    {{ form.password }}
+                </div>
+            </div>
+            {% if form.errors or form.non_field_errors %}
+            <div class="mb-4 p-3 bg-red-100 rounded-md">
+                <div class="border-2 border-black rounded-xl">
+                    {% for field in form %}
+                        {{ field.errors }}
+                    {% endfor %}
+                    {{ form.non_field_errors }}
+                </div>
+            </div>
+            {% endif %}
+            <button class="py-3 px-6 text-lg bg-teal-500 hover:bg-teal-700 text-white rounded-md w-full boton-cabezera">Actualizar datos</button>
+        </form>
+    </div>
+</body>
+</html>
+{% endblock %}

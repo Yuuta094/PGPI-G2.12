@@ -1,0 +1,113 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+<!DOCTYPE html>
+{% load static %}
+    <html lang="es">
+    <head>
+        <title>Mi Pedido</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <style>
+            body {
+                font-family: 'Arial', sans-serif;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+                margin-bottom: 20px;
+            }
+
+            th, td {
+                border: 1px solid #000;
+                padding: 12px;
+                text-align: center;
+            }
+
+            th {
+                background-color: #1a202c;
+                color: white;
+            }
+
+            tr:hover {
+                background-color: #f8fafc;
+            }
+
+            .btn-edit {
+                border-radius: 20px;
+                padding: 6px 15px;
+                background-color: #1c1c1c;
+                color: #FFFFFF;
+            }
+
+            .btn-edit:hover {
+                background-color: #228c33;
+            }
+
+            .btn-delete {
+                border-radius: 20px;
+                padding: 6px 15px;
+                background-color: #1c1c1c;
+                color: #FFFFFF;
+            }
+
+            .btn-delete:hover {
+                background-color: #c72d2b;
+            }
+        </style>
+    </head>
+    <body>
+    <hr class="mt-0">
+    <div class="card shadow m-5" id="myorder">
+        <div class="card-body">
+            <div class="container-fluid">
+                <table class="table table-bordered" style="width:100%">
+                    <thead>
+                    <tr style="border-bottom: 1px solid #000;">
+                        <th>Id</th>
+                        <th>Precio</th>
+                        <th>Estado</th>
+                        <th>Fecha de compra</th>
+                        <th>Detalles</th>
+                        <th>Acción</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for i in orders %}
+                    <tr style="border-bottom: 1px solid #000;">
+                        <td style="text-align: center">{{forloop.counter}}</td>
+                        <td style="text-align: center">{{i.total_price}}</td>
+                        <td style="text-align: center"><a href="/user-order-track/{{i.id}}/" class="btn-edit" title="Ver estado del pedido">{{i.get_status_display}}</a></td>
+                        <td style="text-align: center">{{i.created}}</td>
+                        <td style="text-align: center">
+                            {% for detail in orderdetails %}
+                                {% if detail.order.id == i.id %}
+                                    <li class="border p-4 rounded-md flex items-start">
+                                        <img src="{{ detail.product.image.url }}" alt="{{ detail.product.name }}" class="w-16 h-16 object-cover mr-4">
+                                        <p class="text-grey-darker">{{detail.product.name}} x {{detail.cant}}</p>
+                                        <br>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td style="text-align: center">
+
+                            {% if i.status == 4 %}
+                                <a href="/user-feedback/{{i.id}}/" class="btn-delete">Reclamación</a>
+                            {% else%}
+                                <a>Su pedido aún no se puede reclamar</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    </body>
+    </html>
+
+{% endblock %}

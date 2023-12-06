@@ -1,0 +1,266 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito de Compras</title>
+
+    <style>
+        .flex-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .tabla-container {
+            shadow-md;
+            bg-gray-100;
+            border-2;
+            rounded-lg;
+            width: 65%; /* Ajusta según tus necesidades */
+            margin-right: 2%; /* Ajusta según tus necesidades */
+        }
+        .tabla-container2 {
+          shadow-md;
+          bg-gray-100;
+          border-2;
+          rounded-lg;
+          width: 30%; /* Ajusta según tus necesidades */
+      }
+
+        .resumen-container {
+            shadow-md;
+            bg-gray-100;
+            border-2;
+            rounded-lg;
+            width: 100%; /* Ajusta según tus necesidades */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #1a202c;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f8fafc;
+        }
+
+        button {
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+            padding: 10px 15px;
+            font-weight: bold;
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
+
+        button1 {
+            background-color: #4caf50;
+        }
+
+        button2 {
+            background-color: #f44336;
+        }
+    </style>
+</head>
+<body>
+    <h2 class="text-2xl font-bold mb-4">Carrito de Compras</h2>
+    <div class="flex-container">
+      <!-- Primera tabla en la primera columna -->
+      <div class='tabla-container'>
+        <table class="border border-collapse">
+          <thead class="bg-gray-800 text-white">
+            <tr>
+              <th class="px-6 py-3 text-left">Imagen</th>
+              <th class="px-6 py-3 text-left">Producto</th>
+              <th class="px-6 py-3 text-left">Cantidad</th>
+              <th class="px-6 py-3 text-left">Precio</th>
+              <th class="px-6 py-3 text-left">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in cart_items %}
+              <tr class="hover:bg-gray-100 transition">
+                <td>    
+                  <img src="{{ item.artwork.image.url }}" class="rounded-xl h-24 w-24">
+                </td>
+                <td class="border px-6 py-4">{{ item.artwork.name }}</td>
+                <td class="border px-6 py-4">{{ item.quantity }}</td>
+                <td class="border px-6 py-4">{{ item.artwork.price }}</td>
+                <td class="border px-6 py-4">
+                  <div class="flex items-center space-x-2">
+                    <form method="post" action="{% url 'proyect:add_from_cart' item.artwork.id %}">
+                      {% csrf_token %}
+                      <button type="submit" class="bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline-teal">
+                        +
+                      </button>
+                    </form>
+                    <form method="post" action="{% url 'proyect:substract' item.artwork.id %}">
+                      {% csrf_token %}
+                      <button type="submit" class="bg-black hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline-teal">
+                        -
+                      </button>
+                    </form>
+                    <form method="post" action="{% url 'proyect:remove' item.artwork.id %}" >
+                      {% csrf_token %}
+                      <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline-teal">
+                        Eliminar
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="5" class="border px-6 py-4 text-center">No hay productos en el carrito.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <div class='tabla-container2'>
+        <div class='resumen-container'>
+          <div class='shadow-md bg-gray-100 p-2 border-2 rounded-lg'>
+            <h1>Resumen</h1>
+            <div class="mt-4">
+              <h2 class="text-xl font-bold">Total: {{ total }}</h2>
+              <h2 class="text-xl font-bold">Gastos de envío: {{ shipping_cost }}</h2>
+             <!-- ... (contenido de la segunda tabla) ... -->
+            </div>
+          </div>
+        </div>
+
+        <div class='resumen-container pt-4'>
+          <div class='shadow-md bg-gray-100 p-2 border-2 rounded-lg'>
+            <h1>Método de Pago</h1>
+            <div class="mt-4">
+              <div class="flex justify-between w-full">
+                <div class="w-full">
+                  {% if user.is_authenticated %}
+                  <h2 class="text-xl font-bold">Pagar contrareembolso</h2>
+
+                  <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <div>
+                      <label for="save_data">
+                          <input type="checkbox" name="save_data" id="save_data">
+                          Guardar estos datos para futuras compras
+                      </label>
+                    </div>
+                    <div>
+                      <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        Pagar contrareembolso
+                      </button>
+                    </div>
+                  </form>
+                  {% else %}
+                  <h2 class="text-xl font-bold">Pagar contrareembolso</h2>
+                  <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <div>
+                      <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        Pagar contrareembolso
+                      </button>
+                    </div>
+                  </form>      
+                  {% endif %}
+                </div>
+            </div>
+
+            <h1>---------------------------------------------------------------</h1>
+
+            <div class="mt-4">
+              <h2 class="text-xl font-bold">Paypal:</h2>
+            </div>
+            <div id="paypal-button-container"></div>
+              <!-- Replace the "test" client-id value with your client-id -->
+              <script src="https://www.paypal.com/sdk/js?client-id=AW1fMuweVwUuWL6ViQy2l16BjqLn3AD_D-5gY2OZwej0m6G_ZfjS1yvp7QnwUFwaqMIA6FKp5bXFsgk7&components=buttons&enable-funding=paylater,venmo,card&currency=EUR" data-sdk-integration-source="integrationbuilder_sc"></script>
+            </div>
+          </div>
+        </div>
+
+          <script>
+            function getCookie(name) {
+              let cookieValue = null;
+              if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                  var cookie = cookies[i].trim();
+                  if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                  }
+                }
+              }
+              return cookieValue;
+            }
+          
+            var csrftoken = getCookie('csrftoken');
+            var total = '{{ total }}';
+          
+            function completeOrder() {
+              var url = "{% url 'proyect:paymentComplete' %}";
+              fetch(url, {
+                method: 'POST',
+                headers: {
+                  'Content-type': 'application/json',
+                  'X-CSRFToken': csrftoken,
+                },
+                body: JSON.stringify({ 'customer': sessionStorage.getItem('customer') })
+              });
+            }
+          
+            // Render the PayPal button
+            paypal.Buttons({
+              createOrder: function (data, actions) {
+                return actions.order.create({
+                  purchase_units: [{
+                    amount: {
+                      value: total
+                    }
+                  }]
+                });
+              },
+              onApprove: function (data, actions) {
+                return actions.order.capture().then(function (details) {
+                  alert('Transacción completada por ' + details.payer.name.given_name);
+                  completeOrder();
+                  sessionStorage.clear();
+                  alert('Tu compra se ha efectuado con éxito ' + details.payer.name.given_name);
+
+                });
+              }
+            }).render('#paypal-button-container');
+          </script>
+
+                  <!-- ... (contenido de la segunda tabla) ... -->
+                </div>
+              </div>
+            </div>
+    </div>
+</body>
+</html>
+{% endblock %}
