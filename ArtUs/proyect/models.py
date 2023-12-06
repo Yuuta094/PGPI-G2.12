@@ -28,7 +28,7 @@ class Artwork(models.Model):
     quantity = models.IntegerField()
     manufacturer = models.CharField(max_length=100)
     opinions = models.JSONField(null=True, blank=True)
-    image = models.ImageField(upload_to='proyect/product_images', null=True, blank=True)
+    image = models.ImageField(upload_to='artUS\proyect\product_images', null=True, blank=True)
 
 
 class ShoppingCart(models.Model):
@@ -49,6 +49,7 @@ class Order(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     status = models.IntegerField(choices=orderStatus, default=1) 
     total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0, blank=True)
+    
     address = models.CharField(max_length=100, blank=True)
     country = models.CharField(max_length=50, blank=True)
     city = models.CharField(max_length=100, blank=True)
