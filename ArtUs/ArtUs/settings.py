@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure--43qlbc=p!by9tzga#)q!iid@5#)zz$!jziooo1zm#k@g57=w9
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['ar2us.pythonanywhere.com', '*']
 
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
@@ -135,5 +135,3 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = "artus4artus@gmail.com"
 EMAIL_HOST_PASSWORD = "egrjuevciptxkleh"
-
-ALLOWED_HOSTS = ['ar2us.pythonanywhere.com', '*']
