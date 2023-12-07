@@ -42,7 +42,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'proyect',
 ]
-
+STATICFILES_DIRS = [
+    BASE_DIR / 'proyect' / 'product_images',
+]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
