@@ -1,29 +1,16 @@
+FROM python:3.10-alpine
 
-FROM python:3.10.11
+WORKDIR /app/
+# Install Git
+RUN apk add --no-cache git
 
+RUN git clone https://github.com/Yuuta094/PGPI-G2.12.git PGPI-G2.12
 
-WORKDIR /app
-
-
-RUN git clone https://github.comcd P/Yuuta094/PGPI-G2.12.git 
-
-WORKDIR /app/PGPI-G2.12/artUS
-
-
-
-
-
-# Instalar  dependencias
-RUN pip install --no-cache-dir -r requirements.txt && pip install gunicorn
-
-
-RUN python manage.py makemigrations
+WORKDIR /app/PGPI-G2.12/ArtUs
+ENV PYTHONPATH /app/PGPI-G2.12/ArtUs/ArtUs
+RUN pip install gunicorn
+RUN pip install --no-cache-dir -r requirements.txt
 RUN python manage.py migrate
 
-
-
-
 EXPOSE 8000
-
-# Comando para ejecutar la aplicación
-CMD ["gunicorn", "artus.artus.wsgi:application", "--bind", "0.0.0.0:8000"]
+CMD ["gunicorn", "ArtUs.wsgi:application", "--bind", "0.0.0.0:8000"]
