@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'proyect',
 ]
 STATICFILES_DIRS = [
-    BASE_DIR / 'proyect' / 'product_images',
+    BASE_DIR / 'PGPI-G2.12' / 'proyect' / 'product_images',
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
