@@ -3,25 +3,66 @@
 {% block content %}
 
 {% load static %}
-<html>
+<html lang="es">
 <head>
-    <title>Feedback Form</title>
+    <title>Formulario de reclamaciones</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            color: #343a40;
+            margin: 0;
+            padding: 0;
+            
+        }
+
+        hr {
+            border: 2px solid black;
+            margin-top: 0;
+        }
+
+        .card {
+            margin: 5%;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        h5 {
+            border-bottom: 2px solid black;
+            color: black;
+            padding: 10px 0;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        label {
+            color: black;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+
+    </style>
 </head>
-<style>
-    label{
-        color:black;
-    }
-</style>
 <body>
 
 <hr class="mt-0">
-<div class="card shadow m-5">
+<div class="card shadow">
     <div class="card-body">
         <div class="container-fluid">
-            <h5 class="p-2" style="border-bottom: 2px solid black; color: black;">Formulario de reclamaciones</h5>
+            <h5 class="p-2">Formulario de reclamaciones</h5>
             <form method="post" name="feedback">
                 {% csrf_token %}
-                <div class="form-row" style="margin-bottom: 20px;">
+                <div class="form-row">
                     <div class="col-sm-6">
                         <div class="form-group" style="margin-bottom: 20px;">
                             <label>Pedido</label>
@@ -53,7 +94,7 @@
                         </div>
                     </div>
                 </div>
-                <input type="submit" value="Enviar" class="px-3 py-1.5 text-lg font-semibold bg-teal-500 text-white rounded-xl hover:bg-teal-700">
+                <input class='boton-cabezera text-justify-center' value="Enviar">
             </form>
         </div>
     </div>

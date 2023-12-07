@@ -65,7 +65,7 @@ def new(request):
     
     return render(request, 'product/NewAndEdit.html',{
         'form': form, 
-        'title': 'NewItem'})
+        'title': 'Nueva Obra'})
 
 def detail(request,artwork_id):
     artwork = get_object_or_404(Artwork, pk=artwork_id)
@@ -87,7 +87,7 @@ def edit(request, artwork_id):
         form = EditItemForm(instance=obra)
     return render(request, 'product/NewAndEdit.html',{
         'form': form, 
-        'title': 'Edit Item'})
+        'title': 'Editar Obra'})
     
 
 @login_required
