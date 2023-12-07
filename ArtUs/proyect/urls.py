@@ -39,7 +39,8 @@ urlpatterns = [
     path('edit/<int:user_id>', views.edit_user, name='edit'),
     path('delete/<int:user_id>', views.destroy_user, name='delete'),
     path('edit_profile/', views.edit_profile, name='edit_profile'),
-#Categorys
+#Categories
+    path('allCategories/', views.allCategories, name='allCategories'),
     path('stillLife/', views.stillLife, name='stillLife'),
     path('portrait/', views.portrait, name='portrait'),
     path('landscape/', views.landscape, name='landscape'),

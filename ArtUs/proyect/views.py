@@ -17,7 +17,7 @@ from .forms import *
 #              #
 
 def index(request):
-    artworks = Artwork.objects.all()
+    artworks = Artwork.objects.all()[0:5]
     return render(request, 'core/index.html', {'artworks': artworks})
 
 def signup(request):
@@ -398,6 +398,12 @@ def edit_profile(request):
 #                  #
 #---- Category ----#
 #                  #
+
+def allCategories(request):
+    artworks = Artwork.objects.all()
+    return render(request, 'category/allCategories.html', {
+        'artworks': artworks,
+    })
 
 def stillLife(request):
     artworks = Artwork.objects.filter(category=Category.STILL_LIFE)
