@@ -52,8 +52,8 @@ urlpatterns = [
     path('select-order/', views.unauthenticatedOrderTrack, name="select-order"),
     path('all-orders/', views.adminOrders, name="all-orders"),
     path('user-order-track/<int:order_id>/', views.userOrderTrack, name="user-order-track"),
-    
     path('delete-order/<int:pid>/', views.delete_orders, name="delete_order"),
+    path('<int:order_id>/edit_state_order/',views.edit_state_order,name='edit_state_order'),
 #FeedBacks
     path('my-feedbacks/', views.my_feedbacks, name="my-feedbacks"),
     path('manage-feedback/', views.manage_feedback, name="manage-feedback"),

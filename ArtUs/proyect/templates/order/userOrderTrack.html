@@ -37,7 +37,11 @@
                             <div style="justify-content: center">
                                 {% if request.user.is_authenticated %}
                                     <a href="{% url 'proyect:my-order' %}" class="boton-cabezera">Volver a mis pedidos</a>
+                                    {% if request.user.is_staff %}
+                                      <a href="{% url 'proyect:edit_state_order' order.id %}" class="boton-cabezera w-full">Cambiar estado del pepido</a>
+                                    {% endif %}
                                 {% else %}
+
                                     <a href="{% url 'proyect:login' %}" class="boton-cabezera">Iniciar sesión</a>
                                 {% endif %}
                             </div>

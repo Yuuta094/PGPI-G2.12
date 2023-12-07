@@ -484,6 +484,19 @@ def userOrderTrack(request, order_id):
     orderstatus = orderStatus
     return render(request, "order/userOrderTrack.html", locals())
 
+@login_required
+def edit_state_order(request, order_id):
+    obra= get_object_or_404(Order, id=order_id)
+    if request.method == "POST":
+        form= EditOrderStateForm(request.POST, request.FILES, instance=obra)
+        if form.is_valid():
+            form.save()
+            return redirect("proyect:index")
+    else:
+        form = EditOrderStateForm(instance=obra)
+    return render(request, 'product/NewAndEdit.html',{
+        'form': form, 
+        'title': 'Editar Estado'})
 
 def unauthenticatedOrderTrack(request):
     order_id = request.GET.get('order_id')
