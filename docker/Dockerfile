@@ -12,6 +12,7 @@ ENV DJANGO_SETTINGS_MODULE ArtUs.settings
 RUN pip install gunicorn
 RUN pip install --no-cache-dir -r requirements.txt
 RUN python manage.py migrate
+RUN mkdir -p /app/static
 RUN python manage.py collectstatic --no-input  
 EXPOSE 8000
 CMD ["gunicorn", "ArtUs.wsgi:application", "--bind", "0.0.0.0:8000"]
