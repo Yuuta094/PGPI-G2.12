@@ -543,7 +543,7 @@ def user_feedback(request, order_id):
     customer = request.user
     order = Order.objects.get(id=order_id)
     if request.method == "POST":
-        Feedback.objects.create(customer=request.user, order=order, message=request.POST['feedback'])
+        Feedback.objects.create(customer=request.user, order=order, message=request.POST['feedback'], status=1)
     return render(request, "feedBack/feedback-form.html", locals())
 
 
@@ -558,7 +558,8 @@ def manage_feedback(request):
     return render(request, 'feedBack/manage-feedback.html', locals())
 
 
-def delete_feedback(request, pid):
+def read_feedback(request, pid):
     feedback = Feedback.objects.get(id=pid)
-    feedback.delete()
+    feedback.status = 2 
+    feedback.save()
     return redirect('/manage-feedback/')

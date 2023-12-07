@@ -14,8 +14,9 @@
                 <tr>
                     <th>Id</th>
                     <th>Usuario</th>
+                    <th>Estado</th>
                     <th>Ver comentario</th>
-                    <th>Acciones</th>
+                    <th>Acción</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -23,10 +24,10 @@
                 <tr class='border-black'id="row-{{forloop.counter}}">
                     <td style="text-align: center">{{i.id}}</td>
                     <td style="text-align: center">{{i.customer}}</td>
+                    <td style="text-align: center">{{i.get_status_display}}</td>
                     <td style="text-align: center">{{i.message}}</td>
                     <td style="text-align: center">
-                        <a href="/delete-feedback/{{i.id}}/" class="px-3 py-0.4 text-lg font-semibold bg-red-500 text-white rounded-xl hover:bg-teal-700"
-                            onclick="return confirm('¿Estás seguro/a?')">Borrar</a></td>
+                        <a href="/delete-feedback/{{i.id}}/" class="px-3 py-0.4 text-lg font-semibold bg-red-500 text-white rounded-xl hover:bg-teal-700">Marcar como leído</a></td>
                 </tr>
                 {% endfor %}
                 </tbody>

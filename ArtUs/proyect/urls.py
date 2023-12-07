@@ -59,7 +59,7 @@ urlpatterns = [
     path('my-feedbacks/', views.my_feedbacks, name="my-feedbacks"),
     path('manage-feedback/', views.manage_feedback, name="manage-feedback"),
     path('user-feedback/<int:order_id>/', views.user_feedback, name="user-feedback"),
-    path('delete-feedback/<int:pid>/', views.delete_feedback, name="delete_feedback"),
+    path('read-feedback/<int:pid>/', views.read_feedback, name="read_feedback"),
 #Pago
     path('paymentComplete/',views.paymentComplete,name='paymentComplete'),
 
