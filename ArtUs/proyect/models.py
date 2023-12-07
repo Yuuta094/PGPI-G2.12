@@ -28,7 +28,7 @@ class Artwork(models.Model):
     quantity = models.IntegerField()
     manufacturer = models.CharField(max_length=100)
     opinions = models.JSONField(null=True, blank=True)
-    image = models.ImageField(upload_to='artUS\proyect\product_images', null=True, blank=True)
+    image = models.ImageField(upload_to='artus\proyect\product_images', null=True, blank=True)
 
 
 class ShoppingCart(models.Model):

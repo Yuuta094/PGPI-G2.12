@@ -148,7 +148,7 @@ def search(request):
 #               #
 
 def enviar_correo(order, order_details):
-    ASUNTO = 'ArtUS - Resumen de la compra {}'.format(order.created.strftime('%d/%m/%Y %H:%M'))
+    ASUNTO = 'artus - Resumen de la compra {}'.format(order.created.strftime('%d/%m/%Y %H:%M'))
     template = get_template('shoppingCart/email-order-success.html')
     content = template.render({'email': order.customer.email, 'address':order.address, 'order': order, 'order_details': order_details, 
                                'products': order_details, 'price':order.total_price })
@@ -165,7 +165,7 @@ def enviar_correo(order, order_details):
     
     
 def enviar_correo_no_registrado(order, order_details):
-    ASUNTO = 'ArtUS - Resumen de la compra {}'.format(order.created.strftime('%d/%m/%Y %H:%M'))
+    ASUNTO = 'artus - Resumen de la compra {}'.format(order.created.strftime('%d/%m/%Y %H:%M'))
     template = get_template('shoppingCart/email-order-success.html')
     content = template.render({'email': order.customer, 'address':order.address, 'order': order, 'order_details': order_details, 
                                'products': order_details, 'price':order.total_price })
