@@ -562,4 +562,4 @@ def read_feedback(request, pid):
     feedback = Feedback.objects.get(id=pid)
     feedback.status = 2 
     feedback.save()
-    return redirect('/manage-feedback/')
+    return redirect('/')

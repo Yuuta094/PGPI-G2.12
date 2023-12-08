@@ -29,7 +29,11 @@
 
                             <div class="p-6 bg-white rounded-b-xl shadow-md">
                                 <h2 class="text-2xl">{{ artwork.name }}</h2>
-                                <p class="text-gray-500">Precio: {{ artwork.price }} €</p>
+                                {% if artwork.quantity < 1 %}
+                                    <p style="color: red; font-weight: bold;">AGOTADO</p>
+                                {% else %}
+                                    <p class="text-gray-500">Precio: {{ artwork.price }} €</p>
+                                {% endif %}
                             </div>
                         </a>
                     </div>

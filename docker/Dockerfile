@@ -4,8 +4,7 @@ WORKDIR /app/
 # Install Git
 RUN apk add --no-cache git
 
-RUN git clone https://github.com/Yuuta094/PGPI-G2.12.git PGPI-G2.12
-
+RUN git clone -b develop https://github.com/Yuuta094/PGPI-G2.12.git PGPI-G2.12
 WORKDIR /app/PGPI-G2.12/ArtUs
 ENV PYTHONPATH /app/PGPI-G2.12/ArtUs/ArtUs
 RUN pip install gunicorn

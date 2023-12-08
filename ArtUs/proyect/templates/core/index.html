@@ -80,8 +80,9 @@
                         <h2 class="text-2xl">{{ artwork.name }}</h2>
                         {% if artwork.quantity < 1 %}
                             <p style="color: red; font-weight: bold;">AGOTADO</p>
+                        {% else %}
+                            <p class="text-gray-500">Precio: {{ artwork.price }} €</p>
                         {% endif %}
-                        <p class="text-gray-500">Precio: {{ artwork.price }} €</p>
                     </div>
                 </a>
             </div>
