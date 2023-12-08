@@ -154,6 +154,7 @@ class EditItemForm(forms.ModelForm):
         }
 
 
+
 #                #
 #---- Compra ----#
 #                #
@@ -223,3 +224,16 @@ class PurchaseNotLoggedForm(forms.ModelForm):
         }),
         }
     
+class EditOrderStateForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        exclude = ('ordernum', 'customer', 'total_price', 'address', 'country', 'city', 'zip_code', 'telephone')
+        labels = {
+            'status': 'Estado',
+        }
+
+        widgets = {
+            'status': forms.Select(attrs={
+                'class': 'WIDGETS_STILES' 
+            }),
+        }

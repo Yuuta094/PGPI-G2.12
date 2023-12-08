@@ -21,6 +21,7 @@
                         <th>Fecha</th>
                         <th>Pedido</th>
                         <th>Comentario</th>
+                        <th>Estado</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -30,6 +31,7 @@
                         <td style="text-align: center">{{i.created}}</td>
                         <td style="text-align: center">{{i.order.id}}</td>
                         <td style="text-align: center">{{i.message}}</td>
+                        <td style="text-align: center">{{i.status_display}}</td>
                     </tr>
                     {% endfor %}
                     </tbody>

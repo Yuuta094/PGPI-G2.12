@@ -39,7 +39,8 @@ urlpatterns = [
     path('edit/<int:user_id>', views.edit_user, name='edit'),
     path('delete/<int:user_id>', views.destroy_user, name='delete'),
     path('edit_profile/', views.edit_profile, name='edit_profile'),
-#Categorys
+#Categories
+    path('allCategories/', views.allCategories, name='allCategories'),
     path('stillLife/', views.stillLife, name='stillLife'),
     path('portrait/', views.portrait, name='portrait'),
     path('landscape/', views.landscape, name='landscape'),
@@ -52,13 +53,13 @@ urlpatterns = [
     path('select-order/', views.unauthenticatedOrderTrack, name="select-order"),
     path('all-orders/', views.adminOrders, name="all-orders"),
     path('user-order-track/<int:order_id>/', views.userOrderTrack, name="user-order-track"),
-    
     path('delete-order/<int:pid>/', views.delete_orders, name="delete_order"),
+    path('<int:order_id>/edit_state_order/',views.edit_state_order,name='edit_state_order'),
 #FeedBacks
     path('my-feedbacks/', views.my_feedbacks, name="my-feedbacks"),
     path('manage-feedback/', views.manage_feedback, name="manage-feedback"),
     path('user-feedback/<int:order_id>/', views.user_feedback, name="user-feedback"),
-    path('delete-feedback/<int:pid>/', views.delete_feedback, name="delete_feedback"),
+    path('read-feedback/<int:pid>/', views.read_feedback, name="read_feedback"),
 #Pago
     path('paymentComplete/',views.paymentComplete,name='paymentComplete'),
 

@@ -1,0 +1,40 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Todas las obras{% endblock %}
+
+{% block content %}
+    <div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
+        <h2 class="mb-12 text-2xl text-center">Todas las categorías</h2>
+        <div class="flex justify-center mb-12">
+            <div>
+                <form action="{% url 'proyect:search_page' %}" method="GET" class="flex items-center">
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.5 15.5l5.5 5.5"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.5 17C6.186 17 3.5 14.314 3.5 11S6.186 5 9.5 5s6 2.686 6 6-2.686 6-6 6z"/>
+                        </svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="mt-6 px-6 py-12 rounded-xl bg-gray-100 rounded-lg shadow-md border-2">
+            <div class="grid grid-cols-5 gap-6">
+                {% for artwork in artworks %}
+                    <div class='mb-3'>
+                        <a href="{% url 'proyect:detail' artwork.id %}">
+                            <div>
+                                <img src="{{ artwork.image.url }}" class="rounded-t-xl">
+                            </div>
+
+                            <div class="p-6 bg-white rounded-b-xl shadow-md">
+                                <h2 class="text-2xl">{{ artwork.name }}</h2>
+                                <p class="text-gray-500">Precio: {{ artwork.price }} €</p>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

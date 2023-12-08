@@ -1,14 +1,20 @@
 {% extends 'core/base.html' %}
 {% block content %}
 
-<div class='categoria mb-5'>
+<div class="flex justify-center mb-12">
     <h4 class="letra text-2xl">Categorías destacadas</h4>
 </div>
-<div class="flex mb-5">     
-   
+
+<div class="flex justify-center mb-12">   
+    <form action="{% url 'proyect:allCategories' %}" method="GET" class="mr-4" >
+        <button type="submit" class="boton-categoria">
+            <h1>Todas las categorías</h1>
+        </button>
+    </form>
+
     <form action="{% url 'proyect:stillLife' %}" method="GET" class="mr-4" >
         <button type="submit" class="boton-categoria">
-            <h1>Still Life</h1>
+            <h1>Naturaleza Muerta</h1>
         </button>
     </form>
 
@@ -48,7 +54,7 @@
 <div class="mt-6 px-6 py-12 rounded-xl bg-gray-100 rounded-lg shadow-md border-2">
         <div class="flex justify-center mb-12">
             <div class="flex-grow text-center">
-                <h2 class="letra text-2xl">Productos</h2>
+                <h2 class="letra text-2xl">Productos destacados</h2>
             </div>
             <div>
                 <form action="{% url 'proyect:search_page' %}" method="GET" class="flex items-center">

@@ -17,7 +17,7 @@ from .forms import *
 #              #
 
 def index(request):
-    artworks = Artwork.objects.all()
+    artworks = Artwork.objects.all()[0:5]
     return render(request, 'core/index.html', {'artworks': artworks})
 
 def signup(request):
@@ -65,7 +65,7 @@ def new(request):
     
     return render(request, 'product/NewAndEdit.html',{
         'form': form, 
-        'title': 'NewItem'})
+        'title': 'Nueva Obra'})
 
 def detail(request,artwork_id):
     artwork = get_object_or_404(Artwork, pk=artwork_id)
@@ -87,7 +87,7 @@ def edit(request, artwork_id):
         form = EditItemForm(instance=obra)
     return render(request, 'product/NewAndEdit.html',{
         'form': form, 
-        'title': 'Edit Item'})
+        'title': 'Editar Obra'})
     
 
 @login_required
@@ -399,6 +399,12 @@ def edit_profile(request):
 #---- Category ----#
 #                  #
 
+def allCategories(request):
+    artworks = Artwork.objects.all()
+    return render(request, 'category/allCategories.html', {
+        'artworks': artworks,
+    })
+
 def stillLife(request):
     artworks = Artwork.objects.filter(category=Category.STILL_LIFE)
     return render(request, 'category/stillLife.html', {
@@ -484,6 +490,19 @@ def userOrderTrack(request, order_id):
     orderstatus = orderStatus
     return render(request, "order/userOrderTrack.html", locals())
 
+@login_required
+def edit_state_order(request, order_id):
+    obra= get_object_or_404(Order, id=order_id)
+    if request.method == "POST":
+        form= EditOrderStateForm(request.POST, request.FILES, instance=obra)
+        if form.is_valid():
+            form.save()
+            return redirect("proyect:index")
+    else:
+        form = EditOrderStateForm(instance=obra)
+    return render(request, 'product/NewAndEdit.html',{
+        'form': form, 
+        'title': 'Editar Estado'})
 
 def unauthenticatedOrderTrack(request):
     order_id = request.GET.get('order_id')
@@ -524,7 +543,7 @@ def user_feedback(request, order_id):
     customer = request.user
     order = Order.objects.get(id=order_id)
     if request.method == "POST":
-        Feedback.objects.create(customer=request.user, order=order, message=request.POST['feedback'])
+        Feedback.objects.create(customer=request.user, order=order, message=request.POST['feedback'], status=1)
     return render(request, "feedBack/feedback-form.html", locals())
 
 
@@ -539,7 +558,8 @@ def manage_feedback(request):
     return render(request, 'feedBack/manage-feedback.html', locals())
 
 
-def delete_feedback(request, pid):
+def read_feedback(request, pid):
     feedback = Feedback.objects.get(id=pid)
-    feedback.delete()
+    feedback.status = 2 
+    feedback.save()
     return redirect('/manage-feedback/')
