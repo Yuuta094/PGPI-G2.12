@@ -26,8 +26,15 @@
                     <td style="text-align: center">{{i.customer}}</td>
                     <td style="text-align: center">{{i.get_status_display}}</td>
                     <td style="text-align: center">{{i.message}}</td>
-                    <td style="text-align: center">
-                        <a href="/delete-feedback/{{i.id}}/" class="px-3 py-0.4 text-lg font-semibold bg-red-500 text-white rounded-xl hover:bg-teal-700">Marcar como leído</a></td>
+                    {% if i.get_status_display == "No leído" %}
+                        <td style="text-align: center">
+                            <a href="/read-feedback/{{i.id}}/" class="px-3 py-0.4 text-lg font-semibold bg-orange-500 text-white rounded-xl hover:bg-teal-700">Marcar como leído</a>
+                        </td>
+                    {% else %}
+                        <td style="text-align: center">
+                            Ya se ha leído esta reclamación
+                        </td>
+                    {% endif %}
                 </tr>
                 {% endfor %}
                 </tbody>
