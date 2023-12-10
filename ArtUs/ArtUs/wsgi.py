@@ -12,5 +12,5 @@ import os
 from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ArtUs.settings')
-
+application = WhiteNoise(application, root=os.path.join(BASE_DIR, 'ArtUs', 'staticfiles'))
 application = get_wsgi_application()
