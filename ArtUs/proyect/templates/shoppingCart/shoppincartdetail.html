@@ -219,7 +219,7 @@
             }
           
             var csrftoken = getCookie('csrftoken');
-            var total = '{{ total }}';
+            var total = parseFloat("{{ total }}");
           
             function completeOrder() {
               var url = "{% url 'proyect:paymentComplete' %}";
